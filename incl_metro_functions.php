@@ -23,7 +23,7 @@ if (session_status() === PHP_SESSION_NONE)
 // each page load status is PHP_SESSION_NONE and no SESSION var's existing !!!
 //  WIG_canvas(json_encode($wig_datatable));
 // foreach ($_SESSION as $key => $value){echo "<br> SESSION_key => $key SESSION_val => $value";}
-
+// notepad++ search example (WIG).*?(_txt_db)
 
 // $class = color : alert,info,succes, primary, secondary, success, alert, warning, yellow, info ,light or fg-red bg-blue
 // pos metro          :  tl,tr,bl,br
@@ -35,56 +35,36 @@ if (session_status() === PHP_SESSION_NONE)
 // main start here is always executed when incl_functions.php is used
 // code below cannot be in a function otherwise it is not global !!
 
-
-// first session,global  default values to OFF,ON do not remove START
+// first session,global  default values to OFF,ON,none  do not remove START
 //
-foreach (explode(" ","W_style W_logger W_go_up W_translate W_tooltip W_demo W_class") as $i )
+foreach (explode(" ","W_style W_logger W_go_up W_translate W_tooltip W_demo W_class W_clean_url W_reload") as $i )
 	{if(!isset($_SESSION["$i"] ) || empty($_SESSION["$i"]) ){$_SESSION["$i"] = "OFF";}}
 
-// set default global colors
-$_SESSION["W_class"]="bg-light-green fg-blue";	
-// put logging on in WIG_logger 
-$_SESSION["W_logger"]="ON";
+// first session,global  default some values to ON
+foreach (explode(" ","W_logger W_clean_url W_reload W_tooltip W_style") as $i )
+	{if(!isset($_SESSION["$i"] ) || empty($_SESSION["$i"]) ){$_SESSION["$i"] = "ON";};$_SESSION["$i"] = "ON";}
 
 // now session default values to none 
 foreach (explode(" ","W_toast_txt W_swa_txt W_select_menu W_right_click W_username username role user_include") as $i )
 	{if(!isset($_SESSION["$i"] ) || empty($_SESSION["$i"]) ){$_SESSION["$i"] = "none";}}
-// now the globals default values to integer for pos and timers
 
-// $GLOBALS["W_bl"]="500";$GLOBALS["W_br"]="500";
-// now the globals
-// foreach (explode(" ","myLocal W_my_id W_my_action W_my_delay W_msg W_modal") as $i )
-// {if(!isset($GLOBALS["$i"] ) || empty($GLOBALS["$i"]) ){$GLOBALS["$i"] = "none";}}
+// set default global colors
+$_SESSION["W_class"]="bg-light-green fg-blue";	
 
-
-
-// foreach ( explode(" ","WIG_msg WIG_modal WIG_navbar WIG_canvas WIG_panel WIG_overlay WIG_label WIG_exec WIG_create_form WIG_container") as $i )
-// {if(!isset($GLOBALS["$i"] ) || empty($GLOBALS["$i"]) ){$GLOBALS["$i"] = "none";}}
-
-// $myLocal = $GLOBALS["myLocal"];
-
-// if( !isset($_SESSION["DEBUGS"] )){WIG_chk_needed_files();}
- if( !isset($_SESSION["DEBUG"] ) || empty($_SESSION["DEBUG"]) ){$_SESSION["DEBUG"]="OFF";}
-// 
-// first session,global  default values to OFF,ON do not remove END 
+// first session,global  default values to OFF,ON ,none do not remove END 
 
 
 // check needed scripting .css .js .php !! important generate alarm when missing 
 WIG_chk_needed_files();
+// force tooltip to ON 
 WIG_tooltip("ON");
 
 // $_SESSION["session_id"]=session_id();
 
 // load default session vars of user none 
 $my_include=$_SESSION["username"] . "_incl_session_var.php";
-// WIG_msg("txt=............................................................. username : $my_include","delay=5500");
 if ( !file_exists($my_include ) ){WIG_save_session_vars();}
 if ( file_exists($my_include ) ){include($my_include);}
-
-
-// check needed scripting .css .js .php !! important generate alarm when missing 
-// WIG_chk_needed_files();
-// WIG_toast("txt=logged in as =>" . $_SESSION["username"] ,"class=bg-light-blue fg-green","my_pos=tr","delay=2000");
 
 // reset the GLOBAL arrays 
 WIG_reset_global_vars();
@@ -104,22 +84,17 @@ $_SESSION["DEBUG"]="ON";
 	   {error_reporting(0);}
 
 
-
-
 // send date and session_id to the console
 $my_date=date("d/m/y : H:i:s", time());
 $new_session=json_encode( $my_date . " ... user :" . $_SESSION["username"] . "... session_id =>" . $_SESSION["session_id"] );
 echo "<script type=\"text/javascript\">console.log($new_session);</script>";
-
-
-
 
 // replace std alert 
 // echo "<script> document.addEventListener(\"DOMContentLoaded\", function () {alert = function(a){  JAV_notify(a); }  } );</script>";
 echo "<script>function alert(message) {  JAV_notify(message); }</script>";
 
 // create the objects for metro ui 
- WIG_create();
+WIG_create();
 
 
 
@@ -133,18 +108,6 @@ WIG_change_style_from_txt_db();
 $my_include=basename($_SERVER["SCRIPT_FILENAME"]);$_SESSION["my_include"]="incl_$my_include";
 $my_include="incl_$my_include";
 if ( file_exists($my_include ) ) {include_once($my_include);$_SESSION["select_menu"]="none";}  
-
-
-// include the sql code in incl_mysqli.php
-// $my_include="incl_metro_mysqli.php";
-// if ( !file_exists($my_include ) ){WIG_toast("txt=WARNING did not found $my_include , sql code cannot work");}
-// if ( file_exists($my_include ) ) {include_once($my_include);} 
-
-// include the javascript  code in incl_javascript.php
-// $my_include="incl_metro_javascript.php";
-// if ( !file_exists($my_include ) ){WIG_toast("txt=WARNING did not found $my_include , java code cannot work");}
-// if ( file_exists($my_include ) ) {include_once($my_include);} 
-
 
 // enable events inside container onclick etc ..
 WIG_container_events();	
@@ -179,15 +142,10 @@ if ( !file_exists($my_include ) ){WIG_save_session_vars();}
 if ( file_exists($my_include ) ){include($my_include);}
 
 
-
 //
 // function part starts here
 //
-// WIG_window("top=120px","left=120px","width=600px","height=400px");
 
-
-
-// jquery-3.7.1.min.js
 // HELP check needed included files if missing give error with alert 
 function WIG_chk_needed_files()
 {
@@ -195,31 +153,24 @@ $error=0;$result="\\nERROR\\n";
 // switched to version 20 on 11/01/2026
 $needed_files="metro_5_1_20.css animate.css metro_5_1_20.js incl_metro_functions.php incl_metro_functions_1.php incl_metro_functions_2.php incl_metro_javascript.php";
 $my_param=func_get_args();if ( count($my_param) >  0 ){$needed_files=implode(" " ,$my_param);	}
-
 foreach(explode(" ","$needed_files") as $my_include)	
  {
   if ( !file_exists($my_include ) )
-   { 
-    $error=1;$result="$result" . "\\n $my_include NOK";
-	}
+   {$error=1;$result="$result" . "\\n $my_include NOK";}
  if ( file_exists($my_include ) )
    {
 	 switch( $my_include )
       {
        case 1 == preg_match('/.css/',$my_include):
-	    echo "<link href=\"$my_include\" rel=\"stylesheet\">";
-		$result="$result" . "\\n $my_include OK";
+	    echo "<link href=\"$my_include\" rel=\"stylesheet\">";$result="$result" . "\\n $my_include OK";
        break;
 
        case 1 == preg_match('/.js/',$my_include):
-	    echo "<script src=\"$my_include\"></script>";
-	    $result="$result" . "\\n $my_include OK";
+	    echo "<script src=\"$my_include\"></script>";$result="$result" . "\\n $my_include OK";
        break;		   
        
 	   case 1 == preg_match('/.php/',$my_include):
-	    include_once("$my_include");
-		// WIG_log("loading : $my_include ");
-	    $result="$result" . "\\n $my_include OK";
+	    include_once("$my_include");$result="$result" . "\\n $my_include OK";
        break;
 	   
 	   default :
@@ -228,19 +179,20 @@ foreach(explode(" ","$needed_files") as $my_include)
 	  }
    }
  }
+if ( $error == 1 ){WIG_toastr("$result" , "my_pos=tr" , "delay=1100");}
 if ( $error == 1 ){echo "<script>alert('$result');</script>";} 
-// WIG_toast("txt=loading needed files " , "my_pos=tr" , "delay=1100");
 }
 
 
-// HELP log to a global log 
+// HELP log to a global log and console
 function WIG_log( $txt="none")
 {
 $_SESSION["W_global_log"]=$_SESSION["LOG"] . "/" . "global_" . date("Y_m", time()) . ".log";
 ini_set("error_log", $_SESSION["W_global_log"]);
 ini_set('log_errors_max_len', 1024); 
-echo "<script type=\"text/javascript\">console.log(\"$txt\");</script>";
-$txt=$txt . "\n";
+$my_date=date("d/m/Y : H:i:s", time());
+echo "<script type=\"text/javascript\">console.log( \"$my_date : $txt\");</script>";
+$txt=$my_date . ": " . $txt . "\n";
 error_log("$txt",3,$_SESSION["W_global_log"] ) or trigger_error("could not log to => " . $_SESSION["W_global_log"] );
 }
 
@@ -249,16 +201,22 @@ error_log("$txt",3,$_SESSION["W_global_log"] ) or trigger_error("could not log t
 // HELP simulate unix command tail -f see $GLOBALS["WAR_tail"] is repeatedly calling WIG_logger 
 function WIG_tail()
 {
-$GLOBALS["WAR_tail"]=array_merge($GLOBALS["WAR_tail"],func_get_args());
+$GLOBALS["WAR_tail"]=array_merge($GLOBALS["WAR_tail"],$GLOBALS["WAR_metro"],func_get_args());
 WIAG_bs($GLOBALS["WAR_tail"]);
+$GLOBALS["WAR_tail"]["delay"]=10000;
+$my_delay=$GLOBALS["WAR_tail"]["delay"];
+if ( !file_exists($GLOBALS["WAR_tail"]["filename"]) )
+{$GLOBALS["WAR_tail"]["filename"]=$_SESSION["LOG"] . "/" . "global_" . date("Y_m", time()) . ".log";}
 if ( file_exists($GLOBALS["WAR_tail"]["filename"]) )
 {
  $filename=$GLOBALS["WAR_tail"]["filename"];
  $_SESSION["size"]=filesize("$filename")or trigger_error("could not get filezise  !! ");
  $GLOBALS["WAR_tail"]["fetch"]="incl_metro_functions.php?WIG_logger=filename=$filename";
 }
+$my_tail="tail -f " . $GLOBALS["WAR_tail"]["filename"] . "<br>";
 $my_style=WIAG_bs($GLOBALS["WAR_tail"]);
-echo "<div id=\"output\" $my_style ></div>";
+echo "<div id=\"output\" $my_style >$my_tail</div>";
+
 ?>
     <script>
         const outputDiv = document.getElementById('output');
@@ -280,18 +238,14 @@ echo "<div id=\"output\" $my_style ></div>";
 function WIG_logger()
 {
 $GLOBALS["WAR_logger"]=array_merge($GLOBALS["WAR_logger"],func_get_args());
-WIAG_bs($GLOBALS["WAR_logger"]);
-// $my_filename="log/global_2025_02.log";
-$my_filename=$GLOBALS["WAR_logger"]["filename"];
+WIAG_bs($GLOBALS["WAR_logger"]);$my_filename=$GLOBALS["WAR_logger"]["filename"];
 
 if ( !file_exists($GLOBALS["WAR_logger"]["filename"]) )
-{
- echo "file does not exist : " . $GLOBALS["WAR_logger"]["filename"] . ",  return now at :";WIG_dt();return;
-}
+{echo "file does not exist : " . $GLOBALS["WAR_logger"]["filename"] . ",  return now at :";WIG_dt();return;}
+
 $GLOBALS["WAR_logger"]=array_merge($GLOBALS["WAR_logger"],func_get_args(),get_defined_vars());
 if( !isset($_SESSION["size"] ) || empty($_SESSION["size"]) ){$_SESSION["size"]="1";}
 $file = fopen("$my_filename", "r") or trigger_error("could not open !! ");
-// echo "<br> " . $_SESSION["size"];
 $old_size=$_SESSION["size"];
 $new_size=filesize("$my_filename")or trigger_error("could not get filezise  !! ");
 $_SESSION["size"]=$new_size;
@@ -303,8 +257,7 @@ $num_bytes=$new_size-$old_size;
    $string=fread($file, $num_bytes)or trigger_error("could not read  !! "); 
    $lines = preg_split("/\r\n|\n|\r/", $string); 
    foreach ($lines as $key => $value)
-   {if ( strlen("$value") >= 3 ){echo "$key => $value";}}
-   // print("<pre>".print_r( $lines ,true)."</pre>");
+   {if ( strlen("$value") >= 3 ){echo "<br>$key => $value";}}
    fclose($file);
 }
 
@@ -317,18 +270,15 @@ function WIG_right_click($my_args = "WIG_container=cmd=WIG_menu|%|my_option=h-me
 {
   if( !isset($my_args) || empty($my_args) || preg_match('/^none/',$_SESSION["W_right_click"] ) == 1  )
    {
-   // WIG_toastr("empty args !!!", "warning" , "toast-top-right" , "1000");
    $my_args="WIG_container=cmd=WIG_menu|%|my_option=h-menu|||txt_tablename=h-menu2.dat";
    $_SESSION["W_right_click"]=$my_args;WIG_save_session_vars();
    WIG_reload();
-   } 
-   
+   }    
  if ( count(func_get_args()) == 0 && preg_match('(^WIG_|^JAV_)',$my_args ) == 1 ){$my_args=$_SESSION["W_right_click"];}
- 
   if (  preg_match('(^WIG_|^JAV_)',$my_args ) == 1 )
    {
    // WIG_toastr("reload right click", "warning" , "toast-top-right" , "1000");
-   echo "<script type=\"text/javascript\">  document.addEventListener(\"contextmenu\", function () { JAV_a( \"$my_args\"); } );</script>";
+   echo "<script type=\"text/javascript\">  document.addEventListener(\"contextmenu\", function () { JAV_p( \"$my_args\"); } );</script>";
    }	 
 }
 
@@ -395,7 +345,7 @@ if($file){
 // HELP show progresbar with ccs code  => WIG_progress("timer=2500")
 function WIG_progres()
 {
-$GLOBALS["WAR_progres"]=array_merge($GLOBALS["WAR_progres"],func_get_args());
+$GLOBALS["WAR_progres"]=array_merge($GLOBALS["WAR_progress"],func_get_args());
 WIAG_bs($GLOBALS["WAR_progres"]);
 $timer=$GLOBALS["WAR_progres"]["timer"];
 $seconds = round($timer / 1000, 0, PHP_ROUND_HALF_UP);$timer=$seconds . "s";
@@ -438,10 +388,12 @@ $timer=$GLOBALS["WAR_progress"]["timer"];
 echo "<div><div data-role=\"progress\" $my_style >";
 // echo "<div data-role=\"progress\" class=\"my_progress bg-light-blue\" style=\"width:0%;height:5px\">";
 echo "<script>$(\".my_progress\").animate({width: \"100%\",}, $timer);</script>";
-WIG_clock();
+WIG_progres("timer=$timer");
 echo "</div></div>";
-
 }
+
+
+
 
 // HELP call the repeated jobs to modify use WIG_cron("my_option=show") or WIG_btn("caption=cron","my_option=show") or ?WIG_cron=my_option=show
 function WIG_cron()
@@ -754,8 +706,8 @@ WIAG_bs_exec($GLOBALS["$my_function"]);
 // HELP clean url 
 function WIG_clean_url()
 {
-// clean url
-echo '<script type="text/javascript">history.replaceState(null, "", location.href.split("?")[0]); </script>';
+if ( preg_match('(ON|on)', $_SESSION["W_clean_url"] ) == 1  )	
+{echo '<script type="text/javascript">history.replaceState(null, "", location.href.split("?")[0]); </script>';}
 }
 
 // HELP own error handler if needed see line 97 to enable it +  when DEBUG=ON
@@ -797,10 +749,8 @@ function WIG_reset_dat_file($dat_file = null)
 // HELP reload page + clean url
 function WIG_reload()
 {
-//reload page
-echo '<script type="text/javascript">setTimeout(location.reload.bind(location), 1000);</script>';
-// clean url
-WIG_clean_url();
+ if ( preg_match('(ON|on)', $_SESSION["W_reload"] ) == 1  )	
+ {echo '<script type="text/javascript">setTimeout(location.reload.bind(location), 1000);</script>';WIG_clean_url();}
 }
 
 
@@ -981,6 +931,15 @@ echo "<style> [div*=\"$my_name\"] ,[id*=\"$my_name\"] ,[class*=\"WIG\"] {border-
 // HELP create a form 2 args see below default settings 
 function WIG_create_form($form_record = "W_", $form_action = "WIG_save_session_vars" )
 {
+WIG_reset_global_vars();
+$my_function=__FUNCTION__;$my_function=str_replace("WIG","WAR","$my_function");	
+$GLOBALS["$my_function"]=array_merge($GLOBALS["$my_function"],func_get_args());
+$GLOBALS["$my_function"]["data-role"]="select";$GLOBALS["$my_function"]["w_select"]="w_select_1%%%w_select_2%%%w_select_3%%%w_select_4%%%w_select_5";
+$GLOBALS["$my_function"]["data-clear-Button"]="true";$GLOBALS["$my_function"]["data-filter"]="true";$GLOBALS["$my_function"]["data-filter-placeholder"]="Search : ";
+$GLOBALS["$my_function"]["data-use-placeholder"]="true";
+$GLOBALS["$my_function"]["style"]="NO";
+$my_style=WIAG_bs($GLOBALS["$my_function"]);
+$class=$GLOBALS["$my_function"]["class"];
 if( empty($form_record) && isset($_SESSION["form_record"] ) && !empty($_SESSION["form_record"]) ){$form_record=$_SESSION["form_record"] . " form_record form_action";}
 if( empty($form_action) && isset($_SESSION["form_action"]) && !empty($_SESSION["form_action"]) ){$form_action=$_SESSION["form_action"];}
 
@@ -994,9 +953,8 @@ $post_scriptname=basename($_SERVER["SCRIPT_FILENAME"]);
 echo "<form class='form' action=$post_scriptname id=$new_id enctype='multipart/form-data' method='post'>";
 echo "<button type=submit name=\"$form_action\" class=\"fg-blue bg-red\">Submit</button>";
 echo "<button type=normal onclick=\"window.location.href();return false;\" class=\"fg-green bg-light-blue\">cancel</button>"; 
-
+echo '<input type="checkbox" data-role="theme-switcher" data-state="dark"/>';
 }
-// echo "<div class=\"form-group\">";
 foreach(explode(" ",$form_record) as $var)
 {
 echo "<br> var => $var ";
@@ -1016,6 +974,35 @@ switch($var)
    echo "<input type=\"password\" class=\"form-control\" name='$var' value='$my_old_value' id=\"$var\">";
    echo "</div>";
   break;
+  
+  case 1 == preg_match('(calendar|date)', $var):
+   echo " value => $my_old_value";
+   echo "<div class=\"form-group\">";
+   echo "<input data-role='date-picker' type=\"text\" class=\"form-control\" id=\"$var\" name=\"$var\" value=\"$my_old_value\" >";
+   echo "</div>";
+  break;
+  
+  case 1 == preg_match('(time|hour)', $var):
+   echo " value => $my_old_value";
+   echo "<div class=\"form-group\">";
+   echo "<input type=\"text\" data-role=\"time-picker\" class=\"form-control\" name='$var' value='$my_old_value' id=\"$var\">";
+   echo "</div>";
+  break;
+  
+  case 1 == preg_match('(_select)', $var):
+   echo " value => $my_old_value";
+   $my_array=explode("%%%",$GLOBALS["$my_function"]["w_select"]);
+   echo "<div class=\"form-group\" >";
+   echo "<select type=\"text\" data-role=\"select\" class=\"form-control\" name='$var' value='$my_old_value' id=\"$var\">";
+   echo "<option value=\"$my_old_value\">$my_old_value</option>";
+   $my_array=explode("%%%",$GLOBALS["$my_function"]["w_select"]);
+   foreach ($my_array as $key => $value)
+	{echo "<option  value=\"$value\">$value</option>";}
+   echo "</select>";
+   echo "</div>";
+  break;
+  
+  
   
   case 1 == preg_match('/color/', $var) &&  preg_match('/^W_/', $var) :
    echo "<div class=\"form-group\">";
@@ -1171,9 +1158,6 @@ if( !file_exists($txt_tablename)){WIG_toast("txt=ERROR did not found : $txt_tabl
 file_put_contents( "$txt_tablename", serialize( $txt_db_array) ) or trigger_error("could not write !! ");
 }
 
-
-
-
 // HELP load txt db using _SESSION["txt_tablename"] and  give array as second argument 
 function WIG_get_txt_db($txt_tablename = null , &$txt_db_array = "empty" )
  {
@@ -1225,22 +1209,19 @@ if( !isset($GLOBALS["W_select_menu_$my_script"]) || empty($GLOBALS["W_select_men
 // HELP show date and time
 function WIG_date_time()
 {
-$my_date=date("d/m/y : H:i:s", time());
-echo $my_date;return $my_date;
+$my_date=date("d/m/y : H:i:s", time());echo $my_date;return $my_date;
 }
 
 // HELP show  time
 function WIG_time()
 {
-$my_date=date("H:i:s", time());
-echo $my_date;return $my_date;
+$my_date=date("H:i:s", time());echo $my_date;return $my_date;
 }
 
 // HELP show date and time
 function WIG_dt()
 {
-$my_date=date("d/m/Y : H:i:s", time());
-echo $my_date;return $my_date;
+$my_date=date("d/m/Y : H:i:s", time());echo $my_date;return $my_date;
 }
 
 // HELP logout and set back to user guest 
@@ -1317,19 +1298,15 @@ $my_include=$_SESSION["username"] . "_incl_session_var.php";
 $myfile = fopen("$my_include", "w+") or trigger_error("Unable to open file!");
 fwrite($myfile,"<?php\n");
  foreach ($_SESSION as $key => $value)
- {
-  if (gettype($value) != "array" )
-	 {
-	 if( preg_match('/W_/', $key) == 1 && strlen($key) >=2  && strlen($value) >=1 ){fwrite($myfile,"\$_SESSION[\"$key\"]=\"$value\";\n");}
-	 }
- }
-foreach ($GLOBALS as $key => $value)
- {	
-  if (gettype($value) != "array" )
-	 {
-	 if( preg_match('/W_/', $key) == 1 && strlen($key ?? '') >=2  && strlen($value ?? '') >=1 ){fwrite($myfile,"\$GLOBALS[\"$key\"]=\"$value\";\n");}
-	 }
- }
+  {
+   if (gettype($value) != "array" )
+	 {if( preg_match('/W_/', $key) == 1 && strlen($key) >=2  && strlen($value) >=1 ){fwrite($myfile,"\$_SESSION[\"$key\"]=\"$value\";\n");}}
+  }
+ foreach ($GLOBALS as $key => $value)
+  {	
+   if (gettype($value) != "array" )
+	 {if( preg_match('/W_/', $key) == 1 && strlen($key ?? '') >=2  && strlen($value ?? '') >=1 ){fwrite($myfile,"\$GLOBALS[\"$key\"]=\"$value\";\n");}}
+  }
 fwrite($myfile,"?>");
 fclose($myfile);
 }	
@@ -1389,8 +1366,11 @@ if ( $my_action == "none" )
   $my_action="'$my_action'";
  }
 $my_id="'" . $my_id . "'";$my_delay="'" . $my_delay . "'";
+// WIG_toast("txt=wig_show_hide => $my_id");
 echo "<script type=\"text/javascript\">  $(document).ready(function() { JAV_show_hide($my_id,$my_action,$my_delay); } );</script>";
-// WIG_toast("txt=<br><br>JAV_show_hide($my_id,$my_action,$my_delay)","my_pos=tr","delay=500","width=400px");
+// echo "<br> calling now : JAV_show_hide('WIG_clock')";
+// echo "<script type=\"text/javascript\">JAV_show_hide('WIG_clock');</script>";  
+// WIG_toastr("txt=<br><br>JAV_show_hide($my_id,$my_action,$my_delay)","my_pos=tr","delay=500","width=400px");
 // $to_send="JAV_show_hide($my_id,$my_action,'7s')";
 // WIG_toast("txt=<br><br>$to_send","my_pos=tr","delay=500","width=400px");
 // CORRECT => echo "<script type=\"text/javascript\">JAV_show_hide('WIG_clock','slideInLeft','7s');</script>";  
@@ -1637,7 +1617,7 @@ WIAG_bs_exec($GLOBALS["WAR_exec"]);
 
 
 
-// check if GET is called with params example : ?WIG_toastr=toastr text|||error|||toast_top_left|||10000&WIG_modal=WIG_debug
+// check if GET is called with params example : ?WIG_toastr=txt=hello
 function WIG_GET()
 {
  if ($_SERVER['REQUEST_METHOD'] == 'GET' && !empty($_GET) )

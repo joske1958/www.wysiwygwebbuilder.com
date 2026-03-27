@@ -4,23 +4,126 @@
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
 include_once("incl_metro_functions.php");
+// include_once("dummy.php");
 // WIG_help("my_help=WIG_window");
-WIG_tooltip("ON");
+// WIG_tooltip("ON");
 // echo "<br>:<br>:";
-// WIG_container("my_option=left","class=fg-red bg-blue","visibility=hidden","height=250px","cmd=WIG_menu|%|my_option=v-menu");
-//WIG_msg("my_pos=tr","DEBUG=ON","class=bg-light-red fg-blue");
-//WIG_msg("my_pos=tr","DEBUG=ON","class=bg-light-red fg-blue");
+// WIG_menu("caption=dropdown","my_option=w_dropdown","class=bg-white fg-blue");
+// WIG_dropdown("caption=drop_test","w_dropdown=WIG_fill|||my_caption=fill%%%WIG_msg|||my_caption=wig_msg |||txt=hello|||exec=WIG_container%%%WIG_toastr |||my_caption=wig_toastr|||txt=toast");
+// WIG_dropdown("caption=first");
 // WIG_toast("my_pos=tr","delay=5000");
-WIG_btn("caption=wig metro","cmd=WIG_metro|||data-role=container");
+// echo "<script type=\"text/javascript\">  $(document).ready(function() { JAV_p('WIG_progress'); } );</script>";
+
+// WIG_iframe("iframe=?incl_metro_functions.php=JAV_p");
+// WIG_btn("caption=iframe","cmd=WIG_iframe|||iframe=?incl_metro_functions.php=JAV_notify");
+
+// echo'<embed src="incl_metro_functions.php?JAV_notify=test|||10000|||lime|||400px">';
+
+
+
+	
+
+function WIG_test_4()
+{
+echo "WIG_test_4 is called at : ";	
+
+}
+
+
+WIG_demo();
+return;
+echo "<br>";
+WIG_btn("caption=container","cmd=WIG_container|||delay=60000|||DEBUG=ON");
+WIG_btn("caption=jav notify","cmd=JAV_notify|||hello|||8000|||yellow|||400px");
+WIG_btn("caption=wig_test4","cmd=JAV_p|||WIG_container=cmd=WIG_dt|||DEBUG=ON|||delay=5000");
+WIG_btn("caption=wig_test4 jav_p","cmd=JAV_p|||WIG_container=cmd=WIG_demo|||DEBUG=NN|||delay=5000");
+WIG_btn("caption=wig_test4","cmd=WIG_test_4");
+WIG_btn("caption=wig_m","cmd=JAV_p|||WIG_m");
+
+// echo "<button onclick=\"JAV_p('WIG_msg=DEBUG=ON|||delay=15000')\">Click me JAV_p('WIG_m=DEBUG=ON|||delay=15000')</button>"; 
+
+// WIG_btn("caption=msg","cmd=WIG_msg|||my_pos=tr|||delay=5000");
+// WIG_btn("caption=m","cmd=JAV_p|||WIG_m=DEBUG=ON|||my_pos=tr|||delay=10000|||exec=WIG_clock");
+// WIG_btn("caption=m2","cmd=JAV_p|||WIG_m=DEBUG=ON|||my_pos=tr|||delay=10000|||exec=WIG_clock|||exec2=WIG_dialog|||exec3=WIG_metro_box|%|delay=4000");
+// WIG_btn("caption=msg","cmd=JAV_p|||WIG_msg=DEBUG=ON|||my_pos=tr|||delay=10000");
+// WIG_msg("my_pos=tr");
+WIG_btn("caption=container test","cmd=WIG_container|||visibility=hiddens|%|exec=WIG_demo","refresh=NO");
+return;
+// echo "<button onclick=\"JAV_p('WIG_mm')\">prevent</button>"; 
+// WIG_msg("my_pos=tr");
+
+WIG_btn("caption=wig_m jav","cmd=JAV_p=WIG_m");
+WIG_btn("caption=wig_m wig","cmd=WIG_m");
+// WIG_mm();
+
+// WIG_jscript();
+
+
+
+
+	
+
+
+
+return;
+
+
+
+
+ 
+ 
+
+
+
+
+WIG_btn("caption=progress","cmd=WIG_progress|||delay=5000");
+WIG_btn("caption=msg","cmd=WIG_msg|||delay=5000");
+/// WIG_show_hide("WIG_clock","none","5s");
 WIG_btn("caption=demo","cmd=WIG_container|||visibility=hidden|%|exec=WIG_demo");
 return;
-WIG_btn("caption=msg","cmd=WIG_msg|||width=100%|||DEBUG=ON|||txt=msg testing|||my_pos=tl|||cmd=WIG_dt|||class=bg-light-green fg-blue","refresh=NO");
-WIG_btn("caption=jav_p msg","cmd=JAV_p|||WIG_msg=DEBUG=ON|||my_pos=tl|||class=bg-green fg-red");
+// WIG_btn("caption=wig metro","cmd=WIG_metro|||data-role=container,resizable,draggable|||DEBUG=ON");
+WIG_btn("caption=show hide","cmd=WIG_show_hide|||WIG_clock|||slideInLeft|||5s","refresh=NO");
+
+WIG_btn("caption=jav show hide","cmd=JAV_show_hide|||WIG_clock|||slideInLeft|||5s");
+// WIG_btn("caption=demo","cmd=WIG_container|||visibility=hidden|%|exec=WIG_demo");
+// WIG_btn("caption=jav_p toast","cmd=JAV_p|||WIG_toast=my_pos=tl|||txt=mmmmm");
+// WIG_btn("caption=w_menu","cmd=WIG_container|||visibility=hidden|%|exec=WIG_menu|||my_option=w_dropdown");
+echo "<br><br>";
+// php_function="WIG_msg=cmd=WIG_dt|||class=fg-red bg-blue|||my_pos=tr|||delay=5000|||exec=WIG_clock|||DEBUG=ON|||exec2=WIG_show_hide|%|WIG_clock";
 WIG_btn("caption=jav_p toast","cmd=JAV_p|||WIG_toast=my_pos=tl|||txt=mmmmm");
-echo "<script type=\"text/javascript\">  $(document).ready(function() { JAV_p('WIG_toast=my_pos=tl|||txt=mmmm'); } );</script>";
-WIG_btn("caption=toast","cmd=WIG_toast|||my_pos=tr|||delay=5500");
+WIG_btn("caption=wig toastr","cmd=WIG_toast|||my_pos=tl|||txt=mmmmm");
+
+// WIG_chc("data-role=box","DEBUG=NN");
+// WIG_metro("data-role=notify","DEBUG=ON");
+// WIG_create_form("W_calendar W_time W_select");
+// WIG_dialog("cmd=WIG_fill");
+// WIG_select("w_select=WIG_hello%%%1%%%two%%%three%%%four");
+// WIG_resize();
+
+
+
+
+	
+	
+	
+
+
+
+
+// WIG_btn("caption=master","data-role=master","cmd=WIG_fill");
+WIG_btn("caption=draggable","cmd=WIG_container|||visibility=hidden|||DEBUG=ON|||data-role=resizable|||data-role=draggable|||width=700px|||height=400px");
 return;
-WIG_demo();
+
+WIG_btn("caption=msg","cmd=WIG_msg|||width=100%|||DEBUG=ON|||txt=msg testing|||my_pos=tl|||cmd=WIG_dt|||class=bg-light-green fg-blue","refresh=NO");
+WIG_metro("id=WIG_box2","data-role=box","DEBUG=OFF","width=95%","height=400px","class=fg-blue bg-yellow","my_option=create","exec1=WIG_dt","exec=WIG_clock","exec2=WIG_demo");
+WIG_btn("caption=jav_show_hide 10s wig_box2","cmd=JAV_show_hide|||WIG_box2|||none|||10s");
+WIG_btn("caption=wig_show_hide 10s wig_box2","cmd=WIG_show_hide|||WIG_box2|||none|||10s");
+WIG_btn("caption=jav_p toast","cmd=JAV_p|||WIG_toast=my_pos=tl|||txt=mmmmm");
+// echo "<script type=\"text/javascript\">  $(document).ready(function() { JAV_p('WIG_toast=my_pos=tl|||txt=mmmm'); } );</script>";
+WIG_btn("caption=toast","cmd=WIG_toast|||my_pos=tr|||delay=5500");
+WIG_btn("caption=wizard","cmd=WIG_wizard|||class=fg-white bg-light-blue");
+// WIG_container("cmd=WIG_demo");
+return;
 echo "<pre>";
 // echo "<script type=\"text/javascript\">  $(document).ready(function() { JAV_p('WIG_msg','calling WIG_msg|||alert_danger'); } );</script>";
 // echo "<script type=\"text/javascript\">  $(document).ready(function() { JAV_p('WIG_wizard'); } );</script>";
@@ -311,39 +414,9 @@ WIG_change_menu();
 
 
 
-function WIG_test_set_var()
-{
-echo "<br> WIG_test_set_var";		
-WIG_btn("caption=modify carousel","cmd=WIG_carousel|||my_option=show");
-WIG_btn("caption=modify events","cmd=WIG_container_events|||my_option=show");
-WIG_btn("caption=modify hotkey","cmd=WIG_hotkey|||my_option=show");
-WIG_btn("caption=modify cron","cmd=WIG_cron|||my_option=show");
-WIG_btn("caption=modify style","cmd=WIG_change_style_from_txt_db|||my_option=show");
-// WIG_reset_global_vars();
-WIG_btn("caption=modify session var","cmd=WIG_container|||class=bg-light-blue fg-green|||exec=WIG_change_session_var","class=g-light-blue fg-green");
-WIG_btn("caption=modify global var","cmd=WIG_container|||WIG_change_global_var");
-WIG_btn("caption=modify global  w_top","cmd=WIG_container|%|WIG_change_global_var|||W_top");
-WIG_btn("caption=modify session w_toast","cmd=WIG_container|%|WIG_change_session_var|||W_toast_txt");
-}
 
 
 
-function WIG_test_menu()
-{
-echo "<br> WIG_test_menu";	
-WIG_dropdown("caption=drop_test","w_dropdown=WIG_msg|||txt=hello WIG_container|||txt=lll|||DEBUG=OFF WIG_toastr|||txt=toast");
-WIG_btn("caption=test","cmd=WIG_dt","DEBUG=OFF","class=button fg-red");
-// WIG_msg("DEBUG=ON","class=bg-black fg-white","exec=WIG_dt","my_pos=bl","txt=hellooo","height=200px","delay=5000"); 
-// type of menu : v-menu , h-menu , d-menu , dropdown ,sidebar
-WIG_btn("caption=sidebar menu","cmd=WIG_menu|||txt_tablename=sidebar_menu.dat|||class=fg-green bg-light-blue|||my_option=sidebar");
-WIG_btn("caption=dropdown menu","cmd=WIG_menu|||txt_tablename=dropdown_menu.dat|||class=bg-light-blue fg-green|||my_option=dropdown");
-WIG_btn("caption=w_dropdown menu","cmd=WIG_menu|||class=bg-light-blue fg-red|||my_option=w_dropdown|%|w_dropdown=WIG_msg|||txt=hello WIG_dt|||option=none","color=red");
-WIG_btn("caption=d-menu menu","cmd=WIG_menu|||txt_tablename=d_menu.dat|||class=bg-blue fg-white|||my_option=d-menu");
-WIG_btn("caption=v-menu","cmd=WIG_menu|||txt_tablename=v_menu.dat|||class=bg-yellow fg-red|||my_option=v-menu");
-WIG_btn("caption=h-menu","cmd=WIG_menu|||txt_tablename=h_menu.dat|||class=info|||my_option=h-menu");
-WIG_menu("my_option=w_dropdown","w_dropdown=WIG_msg|||txt=hello WIG_container|||txt=lll|||DEBUG=OFF WIG_toastr|||txt=toast");
-		
-}
 
 function WIG_test_1()
 {
@@ -451,21 +524,25 @@ WIG_go_up("ON");
 // WIG_jscript();
 
 
+
+
+
 function WIG_jscript()
 {
 echo "<br> WIG_jscript()";
 ?>
 <div id="#hello" >hello</div>
 <style>
-:root,div
-{
-    
-	--JAV_scripting: setTimeout(function(){JAV_p('WIG_container');return false;}, 1000);
+:root,div,class
+{   
+	--JAV_scripting: setTimeout(function(){JAV_notify();return false;}, 1000);
 	color:red !important;
 }
 </style>
-  <script>new Function(getComputedStyle(document.documentElement)?.getPropertyValue("--JAV_scripting"))();</script>
+ <script>new Function(getComputedStyle(document.documentElement)?.getPropertyValue("--JAV_scripting"))();</script> 
+  
 <?php
+// <script>new Function(getComputedStyle(document.documentElement)?.getPropertyValue("--JAV_scripting"))();</script>
 }
 
 

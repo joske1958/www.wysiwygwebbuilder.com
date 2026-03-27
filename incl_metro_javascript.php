@@ -26,7 +26,9 @@ error_reporting(E_ALL);
 <script>
 
 
-// HELP  
+
+
+// HELP stop refresh  
 function JAV_prevent()
 {
 document.body.addEventListener('submit', function(event) {event.preventDefault();});
@@ -34,11 +36,12 @@ console.log(Date() + '!!! event.preventDefault on body no GET or POST !!!');
 }	
 
 
+
 // HELP call any script JAV_ or WIG_ directly without refresh 
 function JAV_p(php_function)
 {
 if ( php_function === undefined  ){ php_function="WIG_msg=cmd=WIG_dt|||class=fg-red bg-blue|||my_pos=tr|||delay=5000|||exec=WIG_clock|||DEBUG=ON|||exec2=WIG_show_hide|%|WIG_clock"; }
-console.log(php_function);
+console.log(Date() + 'JAV_p : ' + php_function);
 fetch("incl_metro_functions.php", {
   method: "POST",
   headers: {
@@ -54,18 +57,15 @@ fetch("incl_metro_functions.php", {
   console.log(error)
 })
 }
+
 </script>
 
 
 
 <script>
- 
  function JAV_delay(n){return new Promise((resolve) => setTimeout(function() {resolve(n);}));}
  
- 
-
-	
-	
+ 	
 	
 	function JAV_notify(my_text,my_delay,my_color,my_width)
 	{
@@ -74,6 +74,7 @@ fetch("incl_metro_functions.php", {
 	if ( my_color === undefined  ){ my_color="primary"; }
 	if ( my_delay === undefined  ){ my_delay=15000; }
 	if ( my_width === undefined  ){ my_width=250; }
+	 console.log(Date() + 'JAV_notify ');
 	// alert,info,succes, primary, .secondary, .success, .alert, .warning, .yellow, .info and .light
      Metro.notify.create(my_text, ""  , {timeout:my_delay,width:my_width,clsNotify:my_color});	
 	}
@@ -110,9 +111,6 @@ function JAV_clock(){
 }
 
 
-
-
-
 // HELP enable tooltip with class ja_tooltip 
  function JAV_tooltip()
   {
@@ -146,12 +144,11 @@ function JAV_clock(){
       }
 
     };
+	// console.log( Date() + 'tooltip is called');
+	// JAV_notify();
 }
 // <script>JAV_toastr()
 </script>
-
-
-
 
 
 <script>
@@ -168,14 +165,7 @@ function JAV_loadcss( cssURL ) {
         };
     } );
 }
-
 </script>
-
-
-
-
-
-
 
 <script>
 // JAV_notify(my_text,my_delay,my_color,my_width)
@@ -221,16 +211,6 @@ element.style.setProperty('animation-duration', my_delay);
 element.style.setProperty('animation-name', my_action);
 }
 
-// HELP show object using the id based on jquery 
-function JAV_show_old(my_id,my_action,my_delay)
-{
-var my_id,my_action,my_delay;
- if ( my_action === undefined  ){ my_action="slideleft"; }
- if ( my_delay === undefined  ){ my_delay=2500; }
- my_delay=parseInt(my_delay);
- ShowObjectWithEffect(my_id, 1, my_action, my_delay);
- // var myFunction = function() { ShowObjectWithEffect(my_id, 1, my_action, my_delay); }; myFunction(); 
-}
 
 
 // HELP hide object using the id + https://animate.style/ + delay in : 5s if action = none some random ani are used 
@@ -246,6 +226,7 @@ if ( my_delay === undefined  ){ my_delay='5s'; }
   }
 my_hide_int=parseInt(my_delay, 10);
 my_hide_int=my_hide_int * 900;
+console.log( Date() + 'jav_hide is called' + my_id + "..." + my_action + "...." + my_delay ); 
 // alert(my_id + " :::" + my_action + " :::" +  my_delay );
 const element = document.getElementById(my_id);
 element.style.setProperty('animation-duration', my_delay);
@@ -254,19 +235,6 @@ setTimeout(function(){ element.style.setProperty('visibility', 'hidden'); }, my_
 }
 
 
-
-function JAV_show_hide_cron_old(my_id,my_action,my_delay,my_msg)
-{
-var my_id,my_action,my_delay,my_msg;
- if ( my_action === undefined  ){ my_action="slideleft"; }
- if ( my_msg === undefined  ){ my_msg="no msg given"; }
- if (   my_msg !== "no msg given" ){my_msg=<?php global $WIG_modal;echo json_encode($WIG_modal); ?>;}
- if ( my_delay === undefined  ){ my_delay=1500; }
- my_delay=parseInt(my_delay);
- // var myFunction = function() { ShowObjectWithEffect(my_id, 1, my_action, my_delay); }; myFunction(); 
- ShowObjectWithEffect(my_id, 1, my_action, 1500 );
- setTimeout(function(){ ShowObjectWithEffect(my_id, 0, my_action, 1500 ); },my_delay ); 
-}
 
 // HELP show & hide object using the id + https://animate.style/ + delay in : 5s , if action = none some random ani are used 
 function JAV_show_hide(my_id,my_action = "none",my_delay)
