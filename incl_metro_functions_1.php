@@ -2,56 +2,11 @@
 // incl_metro_functions_1.php used in wbs project 
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
-WIG_reset_global_vars();
+// WIG_reset_global_vars();
 // functions start here 
-
-function WIG_m()
-{
-WIG_reset_global_vars();
-$my_function=__FUNCTION__;$my_function=str_replace("WIG","WAR","$my_function");
-$GLOBALS["$my_function"]=array_merge($GLOBALS["WAR_metro"],func_get_args());
-// $GLOBALS["$my_function"]["visibility"]="hidden";
-$my_style=WIAG_bs($GLOBALS["$my_function"]);
-$my_delay=intval($GLOBALS["$my_function"]["delay"]);$my_txt=$GLOBALS["$my_function"]["txt"];
-$GLOBALS["$my_function"]["width"]="90%";$GLOBALS["$my_function"]["height"]="200px";
-usleep(100);$time_end=round(microtime(true) * 1000);$new_id="$my_function" . "_" . "$time_end";
-// echo "<br> my_delay :$my_delay:";
-$seconds=round($my_delay / 1000, 0, PHP_ROUND_HALF_UP);$seconds=$seconds . "s";
-$animation=$GLOBALS["$my_function"]["animation"];
-$my_style=WIAG_bs($GLOBALS["$my_function"]);
-
-echo "<div $my_style id=\"$new_id\" >";	
-if ( $my_delay > 1000 ){WIG_progress("timer=$my_delay");WIG_progres("timer=$my_delay");}
-echo "$my_txt<br>";
-// echo "<embed src=\"JAV_notify;\">";
-WIG_btn("caption=notify","cmd=JAV_notify");
-
-
-
-?>
-
-<button id="myButton" onclick="JAV_notify();">test</button>
-<script>document.getElementById('myButton').click();</script>
-
-
-<?php
-	
-	
-
-
-//echo "<script type=\"text/javascript\">JAV_notify();return false;</script>";
-// foreach ($GLOBALS["$my_function"] as $key => $value){echo "<br> 1 wig_msg key :$key => $value";}
-WIAG_bs_exec($GLOBALS["$my_function"]);
-// foreach ($GLOBALS["$my_function"] as $key => $value){echo "<br> 2 wig_msg key :$key => $value";}
-if ( preg_match('/^YES/', $GLOBALS["$my_function"]["close_btn"]) == 1  )
-{WIG_btn("caption=X","cmd=JAV_hide|||$new_id|||none|||5s","top=10px","right=10px","position=absolute","background-color=red !important");}
-echo "</div>";
-if ( $my_delay > 1000 ){echo "<script type=\"text/javascript\">JAV_show_hide('$new_id','$animation','$seconds');</script>";}
-if ( $my_delay < 1000 ){echo "<script type=\"text/javascript\">$(document).ready(function() { JAV_show('$new_id','$animation');} );</script>";}		
-}
-
-
-
+$time_end=round(microtime(true) * 1000);
+// WIG_toastr("REFRESH page => username : " . $_SESSION["username"] . " at : $time_end","3000","fg-blue bg-red","400");
+// echo "<br>REFRESH page => username : " . $_SESSION["username"] . " at : $time_end";
 
 // HELP global arrays used and reset them when needed with default values + create needed directories
 function WIG_reset_global_vars()
@@ -67,10 +22,11 @@ function WIG_reset_global_vars()
 if( !isset($_SESSION["W_class"]) || empty($_SESSION["W_class"]) ){ $_SESSION["W_class"]="bg-light-green fg-blue";WIG_save_session_vars();}
 
 // set defaultvalues :WAR_metro is used as default array on most of the functions any change has a big impact so be carefully 
-$GLOBALS["WAR_metro"]=["class" => $_SESSION["W_class"],"left"=>"5px","top"=> "25px","width"=>"95%","height"=>"600px","data-role" => "container,resizable,draggable",
-"position"=>"absolute","delay" => "500","animation" =>"slideInLeft","my_option" => "none","my_pos"=>"none","my_function"=>"none","my_help"=>"none","visibility" =>"visible",
-"cmd" => "none" ,"caption" => "none" ,"txt" => "none","type"=>"info","font-size" => "16px","txt"=>"none","DEBUG" => "OFF","overflow"=>"scroll","pos" => "none","sidebar_btn"=>"YES",
-"my_close_btn"=>"YES","id"=>"none","border"=> "5px solid blue","border-radius"=> "10px","refresh"=>"NO","style"=>"YES","close_btn"=>"YES","z-index"=>"9999"];
+$GLOBALS["WAR_metro"]=["class" => $_SESSION["W_class"],"left"=>"5px","top"=> "25px","width"=>"95%","height"=>"600px","my_select"=>"%%%ON%%%OFF",
+"data-role" => "container,resizable,draggable","position"=>"absolute","delay" => "500","animation" =>"slideInLeft","my_option" => "none",
+"my_pos"=>"none","my_function"=>"none","my_help"=>"none","visibility" =>"visible","cmd" => "none" ,"caption" => "none" ,"txt" => "none","type"=>"info",
+"font-size" => "20px","txt"=>"none","DEBUG" => "OFF","overflow"=>"scroll","pos" => "none","sidebar_btn"=>"NO","my_close_btn"=>"YES","id"=>"none",
+"border"=> "5px solid blue","border-radius"=> "10px","refresh"=>"NO","style"=>"YES","close_btn"=>"YES","help_btn"=>"NO","z-index"=>"9999"];
  
  // all defined functions has as std array $GLOBALS["WAR_metro"]
 $my_array=get_defined_functions();
@@ -87,8 +43,7 @@ $my_array=get_defined_functions();
 $GLOBALS["WAR_demo"]=[ "delay" => "999","txt" => "none","pos" => "none","DEBUG"=>"OFF","cmd" => "none" ,"caption" => "none" ,"border-radius"=> "15px","my_option" => "none","data-role" => "draggable",
 "border-width" => "1px"," border-color" => "blue","w_dropdown"=>"WIG_msg|||txt=msg|||delay=2000%%%WIG_debug WIG_dt","type"=>"info","font-size" => "20px","txt"=>"none","class=fg-black bg-light-green"];
  
-$GLOBALS["WAR_help"]=["my_help"=> "^function WIG_|^function JAV_","color" => "blue !important" , "background-color" => "lightgreen !important",
-"overflow"=>"scroll","border-width" => "3px","border-color" => "blue !important","border-style" => "solid","class" => "bg-light-green fg-blue"];	
+// $GLOBALS["WAR_help"]=["my_help"=> "^function WIG_|^function JAV_","overflow"=>"scroll","border-width" => "3px","border-color" => "blue !important","border-style" => "solid","class" => "bg-light-green fg-blue"];	
  
 $GLOBALS["WAR_iframe"]=["color" => " #000000" , "background-color" => "#E6FFE6","iframe" => "index.html","close_btn"=>"YES",
   "z-index" => "10001" , "txt" => "none" ,"my_option" => "info" , "delay" => "999","exec"=>"empty","overflow"=>"scroll",
@@ -96,7 +51,7 @@ $GLOBALS["WAR_iframe"]=["color" => " #000000" , "background-color" => "#E6FFE6",
  
 // create global arrays where we need special variables 
 $GLOBALS["WAR_tail"]=["filename" => "none" ,"fetch" => "?WIG_dt","color" => " blue !important" , "background-color" => "lightgreen !important",
-"txt" => "none" ,"my_option" => "info" , "delay" => "10000","exec"=>"empty","overflow"=>"scroll", "width"=> "95%","height"=> "500px"];
+"txt" => "none" ,"my_option" => "info" , "delay" => "15000","exec"=>"empty","overflow"=>"scroll", "width"=> "95%","height"=> "500px"];
 
 $GLOBALS["WAR_popupwnd"]=["url" => "index.html" ,"target" => "_blank" , "toolbar" => "no", 
 "scrollbars"=> "yes","resizable"=>"yes","status"=> "0", "width"=> "1200","height"=> "550","top"=> "150","left"=> "150"];
@@ -114,13 +69,81 @@ $GLOBALS["WAR_dialog"]=["data-role"=>"dialog,resizable,draggable","data-auto-hid
 
 $GLOBALS["WAR_progress"]=["timer"=> "5000","class" =>"my_progress fg-red bg-red","width"=>"02%","height"=>"5px"];
 
+$GLOBALS["WAR_debug"]=["my_option"=> "session" ,"rows" => "1" , "class"=>"fg-red bg-light-lime",
+"overflow"=>"scroll","border-width" => "1px","border-color" => "blue !important","border-style" => "solid"];
+
+$GLOBALS["WAR_window"]=["data-title"=>".","data-width"=>"900px","data-height"=>"400px","data-top"=>"10px","data-cls-content"=>"fg-green bg-light-blue",
+"data-left"=>"10px","data-btn-min"=>"true","data-btn-max"=>"true","data-resizable"=>"true","data-cls-window"=>"fg-red bg-blue","data-position"=>"absolute",
+"data-content"=>"<div>.</div>","class"=>"fg-white bg-blue","data-role"=>"window","data-z-index"=>"12000","style"=>"NO","data-dragArea"=>"root","position"=>"absolute"];
+
 // do not remove this as it is used inside WIG_GET and WIG_PUT
 $GLOBALS["WAR_exec"]=$GLOBALS["WAR_metro"];
 
+// set for all user functions the var function to calling function as WAR_
+$my_array=get_defined_functions();
+  foreach ($my_array["user"] as $key => $value)
+    {$new_value=str_replace("wig_","WAR_","$value");$GLOBALS["$new_value"]["function"]=$value;}
+
+// when user is none always set and crypt to the default 
+// if( preg_match('(none)',$_SESSION["user"]) == 1 )
+// {$_SESSION["W_password"]="none";$_SESSION["W_password"]=WIAG_crypt($_SESSION["W_password"]);WIG_save_session_vars();}
+
+
+// load default session vars of user none 
+$_SESSION["my_include"]=$_SESSION["DATA"] . "/" . $_SESSION["username"] . "_incl_session_var.php";
+$my_include=$_SESSION["my_include"];
+// $time_end=round(microtime(true) * 1000);
+// WIG_toastr("REFRESH page => username : " . $_SESSION["username"] . " at : $time_end","3000","fg-blue bg-red","400");
+// echo "<br>REFRESH page => username : " . $_SESSION["username"] . " at : $time_end";
+// echo "<br>WIG SAVE BACKTRACE<pre>";print_r(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS,1));echo "</pre>";
+// if ( strlen($_SESSION["username"]) < 4 ){$_SESSION["username"]="none";WIG_toastr("Wrong username set to default");}
+if ( !file_exists($my_include) && strlen($_SESSION["username"]) > 3 ){WIG_save_session_vars();}
+ if ( file_exists($my_include ) ){include_once($my_include);}
 }
 
 
-// functions starts here 
+
+ // HELP launch tester box in order to execute different functions
+ function WIG_tester()
+ {
+WIG_reset_global_vars();
+$my_function=__FUNCTION__;$my_function=str_replace("WIG","WAR","$my_function");
+$GLOBALS["$my_function"]=array_merge($GLOBALS["WAR_metro"],$GLOBALS["$my_function"],func_get_args());
+$my_style=WIAG_bs($GLOBALS["$my_function"]);
+$my_delay=intval($GLOBALS["$my_function"]["delay"]);$my_txt=$GLOBALS["$my_function"]["txt"];
+usleep(100);$time_end=round(microtime(true) * 1000);$new_id="$my_function" . "_" . "$time_end";
+$seconds=round($my_delay / 1000, 0, PHP_ROUND_HALF_UP);$seconds=$seconds . "s";
+$animation=$GLOBALS["$my_function"]["animation"];
+$GLOBALS["$my_function"]["visibility"]="hiddens";
+$my_style=WIAG_bs($GLOBALS["$my_function"]);
+echo "<div $my_style id=\"$new_id\" >";	
+echo "<br> WIG_tester is called";WIG_dt();
+if ( $my_delay > 1000 ){WIG_progress("timer=$my_delay");WIG_progres("timer=$my_delay");}
+if ( preg_match('/^none/',$GLOBALS["$my_function"]["txt"])== 0 ){echo "<br> $my_txt ";}
+WIAG_bs_exec($GLOBALS["$my_function"]);
+/*
+WIG_create_form("W_select_option W_select_2 W_select_tester W_fill_in","WIG_save_session_vars",
+"W_select_option=none%%%left%%%right%%%top%%%bottom",
+"W_select_2=none%%%WIG_dt%%%ll%%%dd", 
+"W_select_tester=none%%%WIG_container|||class=fg-red bg-blue|||visibility=hidden%%%WIG_dt%%%WIG_msg%%%WIG_iframe|||iframe=https://vrtnews.be%%%JAV_p|||WIG_dt");
+//  
+*/
+
+
+
+if ( preg_match('/^YES/', $GLOBALS["$my_function"]["close_btn"]) == 1  )
+{WIG_btn("caption=X","cmd=JAV_hide|||$new_id|||none|||5s","top=10px","right=10px","position=absolute","background-color=red !important");}
+
+echo "</div>";
+if ( $my_delay > 1000 ){echo "<script type=\"text/javascript\">JAV_show_hide('$new_id','$animation','$seconds');</script>";}
+if ( $my_delay < 1000 ){echo "<script type=\"text/javascript\">$(document).ready(function() { JAV_show('$new_id','$animation');} );</script>";}		 
+	 
+	 
+	 
+ }
+ 
+
+
 
 // HELP start demo using dropdown last option is always used with session var W_demo
 function WIG_demo()
@@ -150,6 +173,7 @@ WIG_dropdown("caption=select 2:","class=bg-white fg-green","w_dropdown=
 WIG_iframe|||my_option=iframe howto.pdf|||iframe=howto.pdf%%%
 WIG_container|||visibility=hidden|%|exec=WIG_demo|||my_option=help%%%
 WIG_container|||visibility=hidden|%|exec=WIG_demo|||my_option=examples%%%
+WIG_container|||visibility=hidden|%|exec=WIG_demo|||my_option=tester%%%
 WIG_container|||visibility=hidden|%|exec=WIG_demo|||my_option=user");
 
 WIG_dropdown("caption=select 3:","class=bg-white fg-blue","w_dropdown=
@@ -164,6 +188,15 @@ if(!isset($_SESSION["W_demo"] ) || empty($_SESSION["W_demo"]) ){$_SESSION["W_dem
 // WIG_dropdown("caption=functions : ","w_dropdown=$my_dropdown");
 echo "option : " . $_SESSION["W_demo"];
 // preg_match('(^WIG_|^JAV_)'
+ if( preg_match('(tester|all)',$_SESSION["W_demo"]) == 1 )
+ {
+  WIG_create_form("W_select_option W_select_2 W_select_tester W_fill_in","WIG_save_session_vars",
+  "W_select_option=none%%%left%%%right%%%top%%%bottom",
+  "W_select_2=none%%%WIG_dt%%%ll%%%dd", 
+  "W_select_tester=none%%%WIG_container|||class=fg-red bg-blue|||visibility=hidden%%%WIG_dt%%%WIG_msg%%%WIG_iframe|||iframe=https://vrtnews.be%%%JAV_p|||WIG_dt");	 
+	 
+ }
+
  if( preg_match('(modify|all)',$_SESSION["W_demo"]) == 1 ){
 	WIG_btn("caption=modify events","cmd=WIG_container_events|||my_option=show");WIG_btn("caption=modify hotkey","cmd=WIG_hotkey|||my_option=show");
     WIG_btn("caption=modify cron","cmd=WIG_cron|||my_option=show");WIG_btn("caption=modify style","cmd=WIG_change_style_from_txt_db|||my_option=show");
@@ -200,18 +233,21 @@ if ( preg_match('(menu|all)',$_SESSION["W_demo"]) == 1 ){
 	  
 if ( preg_match('(jav_p|iframe|all)',$_SESSION["W_demo"])== 1 )
  {
-  WIG_btn("caption=test jav_p : container => wig_menu","cmd=JAV_p|||WIG_container=cmd=WIG_menu|||class=fg-lightblue bg-green");
-  WIG_btn("caption=test jav_p :container => wig_v-menu","cmd=JAV_p|||WIG_container=my_option=left|||class=fg-red bg-blue|||height=250px|||cmd=WIG_menu|%|my_option=v-menu");
-  WIG_btn("caption=msg with jav_p","cmd=JAV_p|||WIG_msg=txt=msg testing|||my_pos=tr|||cmd=WIG_dt|||class=bg-white fg-red");
-  WIG_btn("caption=msg with jav_p","cmd=JAV_p|||WIG_msg=txt=msg testing|||my_pos=tr|||cmd=WIG_dt|||class=bg-green fg-blue");
-  WIG_btn("caption=iframe howto.pdf","class=fg-white bg-black","cmd=WIG_iframe|||iframe=howto.pdf");
+  WIG_btn("caption=tijd.be","cmd=WIG_iframe|||iframe=https://www.tijd.be/podcasts/de-7.html");
+  WIG_btn("caption=beste podcast","cmd=WIG_iframe|||iframe=https://www.eefinthecity.com/nl/post/de-beste-vlaamse-podcasts-belgie");
   WIG_btn("caption=iframe vrtnews","class=fg-white bg-black","cmd=WIG_iframe|||iframe=https://www.vrt.be/vrtnws/nl/");
   WIG_btn("caption=iframe pcloud test","class=fg-white bg-black","cmd=WIG_iframe|||iframe=https://e.pcloud.link/publink/show?code=kZ9ABtZWWPIxCynuVbGmPbuWSbXpHGaVGuk");
   WIG_btn("caption=iframe koksijde-bad","class=fg-white bg-black","cmd=WIG_iframe|||iframe=https://www.youtube.com/embed/5Uqw_G_IdjE");
   WIG_btn("caption=iframe server word","class=fg-white bg-black","cmd=WIG_iframe|||iframe=https://www.server-world.info/en/");
   WIG_btn("caption=iframe metroui","class=fg-white bg-blue","cmd=WIG_iframe|||iframe=https://v5.metroui.org.ua/");
   WIG_btn("caption=iframe newsdata","class=fg-white bg-blue","cmd=WIG_iframe|||iframe=https://newsdata.io/");
-  WIG_help("my_help=JAV_p");
+  WIG_btn("caption=test jav_p : container => wig_menu","cmd=JAV_p|||WIG_container=cmd=WIG_menu|||class=fg-lightblue bg-green");
+  WIG_btn("caption=test jav_p :container => wig_v-menu","cmd=JAV_p|||WIG_container=my_option=left|||class=fg-red bg-blue|||height=250px|||cmd=WIG_menu|%|my_option=v-menu");
+  WIG_btn("caption=msg with jav_p","cmd=JAV_p|||WIG_msg=txt=msg testing|||my_pos=tr|||cmd=WIG_dt|||class=bg-white fg-red");
+  WIG_btn("caption=msg with jav_p","cmd=JAV_p|||WIG_msg=txt=msg testing|||my_pos=tr|||cmd=WIG_dt|||class=bg-green fg-blue");
+  WIG_btn("caption=iframe howto.pdf","class=fg-white bg-black","cmd=WIG_iframe|||iframe=howto.pdf");
+  
+  // WIG_help("my_help=JAV_p");
  }
 	 
 if ( preg_match('(user|all)',$_SESSION["W_demo"]) == 1 )
@@ -474,7 +510,29 @@ if ( $my_delay > 1000 ){echo "<script type=\"text/javascript\">JAV_show_hide('$n
 if ( $my_delay < 1000 ){echo "<script type=\"text/javascript\">$(document).ready(function() { JAV_show('$new_id','$animation');} );</script>";}		
 }
 
+// HELP call java code using PHP function WIG_jav url : ?WIG_jav=JAV_notify or WIG_jav("JAV_notify") or WIG_btn("caption=wig_jav notify","cmd=WIG_jav|||JAV_notify")
+function WIG_jav($given_arg = "none")
+{
+echo "<div>";
+echo "<span id=\"span\"></span>";
+if ( $given_arg == "none" || $given_arg == "empty")	{WIG_toastr("no arguments given " );return;}
+if ( preg_match('(^JAV_)',$given_arg ) == 0 ){WIG_toastr("function does not begin with JAV_ !! ");return;}
+if ( preg_match('/\|\|\|/',json_encode(func_get_args())) == 1 ) {$num_args=explode("|||",$given_arg);}
+else
+{$my_param=func_get_args();}
 
+$to_execute="<script type=\"text/javascript\">  $(document).ready(function() { " . $my_param[0] . "(";
+$last_param=count($my_param)-1;
+for ($i = 1; $i <= count($my_param)-1; $i++)
+   {
+	if ( $i < $last_param ){$to_execute = $to_execute . "'" . $my_param[$i] . "',";} 
+    if ( $i ==  $last_param ){$to_execute = $to_execute . "'" . $my_param[$i] . "'";} 
+   }
+$to_execute = $to_execute . "); } );</script>";
+// WIG_toastr("WIG_jav is called  : $to_execute");
+echo "$to_execute";
+echo "</div>";
+}
 
 // HELP show metroui clock with no date 
 function WIG_clock()
@@ -485,7 +543,7 @@ function WIG_clock()
 
 function WIG_create()
 {
-WIG_metro("id=WIG_clock","data-role=container","DEBUG=OFF","width=200px","height=100px","class=alert","my_option=create","exec=WIG_jav|||JAV_clock");		
+WIG_metro("id=WIG_clock","data-role=container","DEBUG=OFF","width=200px","height=100px","class=alert","my_option=create","exec=WIG_clock");		
 WIG_metro("id=WIG_window","data-role=window","DEBUG=OFF","width=1200px","height=500px","data-hidden=true","class=window","my_option=create","exec=WIG_debug");			
 WIG_metro("id=WIG_box","data-role=box","DEBUG=OFF","width=600px","height=400px","visibility=hidden","class=box","my_option=create","exec=WIG_clock","exec2=WIG_dt");					
 WIG_reset_global_vars();
@@ -527,23 +585,18 @@ echo "</div>";
 
 
 
-// HELP create window from metro ui"data-place"=>"center",
+// HELP create window from metro ui data-role=window ,
 function WIG_window()
 {
 WIG_reset_global_vars();
 $my_function=__FUNCTION__;$my_function=str_replace("WIG","WAR","$my_function");	
-$GLOBALS["WAR_window"]=["data-title"=>".","data-width"=>"900px","data-height"=>"400px","data-top"=>"10px","data-cls-content"=>"fg-green bg-light-blue",
-"data-left"=>"10px","data-btn-min"=>"true","data-btn-max"=>"true","data-resizable"=>"true","data-cls-window"=>"fg-red bg-blue","data-position"=>"fixed",
-"data-content"=>"<div>.</div>","class"=>"fg-white bg-blue","data-role"=>"window","style"=>"NO","data-dragArea"=>"root"];
-$GLOBALS["$my_function"]=array_merge($GLOBALS["WAR_metro"],$GLOBALS["WAR_window"],func_get_args());
+$GLOBALS["$my_function"]=array_merge($GLOBALS["WAR_metro"],$GLOBALS["$my_function"],func_get_args());
 $my_delay=$GLOBALS["$my_function"]["delay"];$my_txt=$GLOBALS["$my_function"]["txt"];
 usleep(100);$time_end=round(microtime(true) * 1000);$new_id="$my_function" . "_" . "$time_end";
 $seconds=round($my_delay / 1000, 0, PHP_ROUND_HALF_UP);$seconds=$seconds . "s";
 $my_style=WIAG_bs($GLOBALS["$my_function"]);
 echo "<div $my_style id=\"$new_id\" >";
-echo "<br> $my_style";
-echo "<br> id : $new_id <br>";
-WIG_dt();
+// echo "<br>STYLE : <br>$my_style <br>";
 WIAG_bs_exec($GLOBALS["$my_function"]);
 echo "</div>";
 }
@@ -650,25 +703,7 @@ echo "</div>";
 }
 
 
-function WIG_metro_box()
-{
-$my_function=__FUNCTION__;$my_function=str_replace("WIG","WAR","$my_function");	
-$GLOBALS["$my_function"]=array_merge($GLOBALS["WAR_metro"],func_get_args());
-$GLOBALS["$my_function"]["data-role"]="box,resizable,draggable";
-$my_style=WIAG_bs($GLOBALS["$my_function"]);
-$my_delay=$GLOBALS["$my_function"]["delay"];$my_txt=$GLOBALS["$my_function"]["txt"];
-usleep(100);$time_end=round(microtime(true) * 1000);$my_id="$my_function" . "_" . "$time_end";
-echo "<div $my_style id=$my_id>";WIG_progress("timer=$my_delay");
-// echo "$my_style";
-$seconds=round($my_delay / 1000, 0, PHP_ROUND_HALF_UP);$seconds=$seconds . "s";
-if ( $my_delay > 1000 ){echo "<script type=\"text/javascript\">JAV_show_hide('$my_id','none','$seconds');</script>";}  
-if ( $my_delay < 1000 ){echo "<script type=\"text/javascript\">JAV_show('$my_id','none','$seconds');</script>";} 
- WIAG_bs_exec($GLOBALS["$my_function"]);
-if ( preg_match('/^YES/', $GLOBALS["$my_function"]["close_btn"]) == 1  )
-{WIG_btn("caption=X","cmd=JAV_hide|||$my_id|||none","top=10px","right=10px","position=absolute","background-color=red !important");}
 
- echo "</div>";
-}
 
 
 // HELP call the metro dialog object 
@@ -707,7 +742,7 @@ $timeout=$GLOBALS["$my_function"]["delay"];
 // alert,info,succes, primary, .secondary, .success, .alert, .warning, .yellow, .info and .light
 // echo "<br> wig_notify : clsNotify: $my_color , width:$my_width , timeout : $my_delay  , args : $my_text ";
 // <script type=\"text/javascript\">  $(document).ready(function() { JAV_notify('tester','20000','red','500px'); } );</script>";
-echo "<script>$(document).ready(function() { Metro.notify.create(\"$my_text\",\"\",{clsNotify:\"$my_color\",width:$my_width,duration:1000,timeout:$my_delay}); });</script>";
+echo "<script>$(document).ready(function() { Metro.notify.create(\"$my_text\",\"\",{clsNotify:\"$my_color\",width:$my_width,duration:2000,timeout:10000}); });</script>";
 
 /*
 ?>

@@ -13,6 +13,11 @@ if (session_status() === PHP_SESSION_NONE)
    session_start();
    $_SESSION["session_id"]=session_id();
  }
+ 
+ // after sesion start create the needed session var's if not existing
+ foreach (explode(" ","username password id street country age") as $i )
+	{if(!isset($_SESSION["$i"] ) || empty($_SESSION["$i"]) ){$_SESSION["$i"] = "none";}}
+ 
 // new session start + set user to guest when first session
 // if (session_status() === PHP_SESSION_NONE)
 // if (session_status() === PHP_SESSION_ACTIVE )
@@ -35,39 +40,31 @@ if (session_status() === PHP_SESSION_NONE)
 // main start here is always executed when incl_functions.php is used
 // code below cannot be in a function otherwise it is not global !!
 
+
+
 // first session,global  default values to OFF,ON,none  do not remove START
 //
-foreach (explode(" ","W_style W_logger W_go_up W_translate W_tooltip W_demo W_class W_clean_url W_reload") as $i )
+// now session default values to none 
+foreach (explode(" ","W_test W_class W_toast_txt W_swa_txt W_select_menu W_right_click W_user W_password") as $i )
+	{if(!isset($_SESSION["$i"] ) || empty($_SESSION["$i"]) ){$_SESSION["$i"] = "none";}}
+
+foreach (explode(" ","W_style W_logger W_go_up W_translate W_tooltip W_demo W_class W_clean_url W_create_form") as $i )
 	{if(!isset($_SESSION["$i"] ) || empty($_SESSION["$i"]) ){$_SESSION["$i"] = "OFF";}}
 
 // first session,global  default some values to ON
 foreach (explode(" ","W_logger W_clean_url W_reload W_tooltip W_style") as $i )
-	{if(!isset($_SESSION["$i"] ) || empty($_SESSION["$i"]) ){$_SESSION["$i"] = "ON";};$_SESSION["$i"] = "ON";}
-
-// now session default values to none 
-foreach (explode(" ","W_toast_txt W_swa_txt W_select_menu W_right_click W_username username role user_include") as $i )
-	{if(!isset($_SESSION["$i"] ) || empty($_SESSION["$i"]) ){$_SESSION["$i"] = "none";}}
+	{if(!isset($_SESSION["$i"] ) || empty($_SESSION["$i"]) ){$_SESSION["$i"] = "ON";}}
 
 // set default global colors
 $_SESSION["W_class"]="bg-light-green fg-blue";	
-
+// echo "<br>REFRESH2 page => username : " . $_SESSION["username"];
 // first session,global  default values to OFF,ON ,none do not remove END 
-
 
 // check needed scripting .css .js .php !! important generate alarm when missing 
 WIG_chk_needed_files();
+WIG_reset_global_vars();
 // force tooltip to ON 
 WIG_tooltip("ON");
-
-// $_SESSION["session_id"]=session_id();
-
-// load default session vars of user none 
-$my_include=$_SESSION["username"] . "_incl_session_var.php";
-if ( !file_exists($my_include ) ){WIG_save_session_vars();}
-if ( file_exists($my_include ) ){include($my_include);}
-
-// reset the GLOBAL arrays 
-WIG_reset_global_vars();
 
 // when writing/testing php code please set DEBUG to on , on prod turn OFF 
 $_SESSION["DEBUG"]="ON"; 	  
@@ -84,11 +81,6 @@ $_SESSION["DEBUG"]="ON";
 	   {error_reporting(0);}
 
 
-// send date and session_id to the console
-$my_date=date("d/m/y : H:i:s", time());
-$new_session=json_encode( $my_date . " ... user :" . $_SESSION["username"] . "... session_id =>" . $_SESSION["session_id"] );
-echo "<script type=\"text/javascript\">console.log($new_session);</script>";
-
 // replace std alert 
 // echo "<script> document.addEventListener(\"DOMContentLoaded\", function () {alert = function(a){  JAV_notify(a); }  } );</script>";
 echo "<script>function alert(message) {  JAV_notify(message); }</script>";
@@ -96,13 +88,8 @@ echo "<script>function alert(message) {  JAV_notify(message); }</script>";
 // create the objects for metro ui 
 WIG_create();
 
-
-
 // change styles based on value of a txt db
 WIG_change_style_from_txt_db();
-
-
-
 
 // try to find incl_"SCRIPT_FILENAME".php and include it
 $my_include=basename($_SERVER["SCRIPT_FILENAME"]);$_SESSION["my_include"]="incl_$my_include";
@@ -116,8 +103,8 @@ WIG_container_events();
 WIG_go_up();
 
 // check if we used GET or POST 
-WIG_GET();
-WIG_POST();
+WIAG_GET();
+WIAG_POST();
 
 // enable the hotkeys
 WIG_hotkey();
@@ -131,20 +118,47 @@ WIG_translate();
 // set event for mouse right click 
 WIG_right_click();
 
-
 // start logging to console and global log 
-WIG_log("logging started ");
-
-
-// include now the user session var's if it does not exist create new one with default vanlue
-$my_include=$_SESSION["username"] . "_incl_session_var.php";
-if ( !file_exists($my_include ) ){WIG_save_session_vars();}	
-if ( file_exists($my_include ) ){include($my_include);}
-
-
+WIG_log("=> logging started due to load or refresh page , user => " . $_SESSION["username"] . "... session_id => " . $_SESSION["session_id"]);
 //
 // function part starts here
 //
+
+// HELP WIG_toast color metro= class : bg-blue fg-red ,alert,info,succes, primary, .secondary, .success, .alert, .warning, .yellow, .info and .light 
+// ELP WIG_toast  my_pos metro          :  top,left,bottom, right , tl,tr,bl,br
+// HELP create toast msg with given params , the position is determined by "my_pos" , the color by "class"
+function WIG_toast_old()
+{
+$my_function=__FUNCTION__;$my_function=str_replace("WIG","WAR","$my_function");
+$GLOBALS["$my_function"]=array_merge($GLOBALS["WAR_metro"],func_get_args());
+$GLOBALS["$my_function"]["delay"]="2000";$GLOBALS["$my_function"]["z-index"]="9999";
+$GLOBALS["$my_function"]["width"]="300px";$GLOBALS["$my_function"]["height"]="100px";
+unset($GLOBALS["$my_function"]["border"]);
+$GLOBALS["$my_function"]["sidebar_btn"]="NO";
+$my_style=WIAG_bs($GLOBALS["$my_function"]);
+if ( preg_match('/right|tr|br|mid|mr/', $GLOBALS["$my_function"]["my_pos"]) == 1 ){$GLOBALS["$my_function"]["left"]="80%";}
+$my_style=WIAG_bs($GLOBALS["$my_function"]);
+$animation=$GLOBALS["$my_function"]["animation"];
+$my_delay=$GLOBALS["$my_function"]["delay"];$my_txt=$GLOBALS["$my_function"]["txt"];
+usleep(100);$time_end=round(microtime(true) * 1000);$new_id="$my_function" . "_" . "$time_end";
+$seconds=round($my_delay / 1000, 0, PHP_ROUND_HALF_UP);$seconds=$seconds . "s";
+echo "<div $my_style id=\"$new_id\" >";	
+if ( $my_delay > 1000 ){WIG_progress("timer=$my_delay");}
+echo "$my_txt <br>";
+WIAG_bs_exec($GLOBALS["$my_function"]);
+if ( preg_match('/^YES/', $GLOBALS["$my_function"]["close_btn"]) == 1  )
+{
+$close_animation=str_replace("In","Out","$animation");
+WIG_btn("caption=X","cmd=JAV_hide|||$new_id|||$close_animation|||5s","top=5px","right=5px","position=absolute","background-color=red !important");
+}
+echo "</div>";
+if ( $my_delay < 1000 ){echo "<script type=\"text/javascript\">JAV_show('$new_id','$animation');</script>";}	
+if ( $my_delay > 1000 )
+{echo "<script type=\"text/javascript\">JAV_show_hide('$new_id','$animation','$seconds');</script>";}	
+}
+
+
+
 
 // HELP check needed included files if missing give error with alert 
 function WIG_chk_needed_files()
@@ -171,7 +185,7 @@ foreach(explode(" ","$needed_files") as $my_include)
        
 	   case 1 == preg_match('/.php/',$my_include):
 	    include_once("$my_include");$result="$result" . "\\n $my_include OK";
-       break;
+	   break;
 	   
 	   default :
 	    $result="$result" . "\\n <$my_include OK";
@@ -201,9 +215,9 @@ error_log("$txt",3,$_SESSION["W_global_log"] ) or trigger_error("could not log t
 // HELP simulate unix command tail -f see $GLOBALS["WAR_tail"] is repeatedly calling WIG_logger 
 function WIG_tail()
 {
-$GLOBALS["WAR_tail"]=array_merge($GLOBALS["WAR_tail"],$GLOBALS["WAR_metro"],func_get_args());
+$GLOBALS["WAR_tail"]=array_merge($GLOBALS["WAR_metro"],$GLOBALS["WAR_tail"],func_get_args());
 WIAG_bs($GLOBALS["WAR_tail"]);
-$GLOBALS["WAR_tail"]["delay"]=10000;
+// $GLOBALS["WAR_tail"]["delay"]=10000;
 $my_delay=$GLOBALS["WAR_tail"]["delay"];
 if ( !file_exists($GLOBALS["WAR_tail"]["filename"]) )
 {$GLOBALS["WAR_tail"]["filename"]=$_SESSION["LOG"] . "/" . "global_" . date("Y_m", time()) . ".log";}
@@ -213,7 +227,7 @@ if ( file_exists($GLOBALS["WAR_tail"]["filename"]) )
  $_SESSION["size"]=filesize("$filename")or trigger_error("could not get filezise  !! ");
  $GLOBALS["WAR_tail"]["fetch"]="incl_metro_functions.php?WIG_logger=filename=$filename";
 }
-$my_tail="tail -f " . $GLOBALS["WAR_tail"]["filename"] . "<br>";
+$my_tail="tail -f " . $GLOBALS["WAR_tail"]["filename"] . " => delay : " . $GLOBALS["WAR_tail"]["delay"] . "<br>";
 $my_style=WIAG_bs($GLOBALS["WAR_tail"]);
 echo "<div id=\"output\" $my_style >$my_tail</div>";
 
@@ -265,6 +279,7 @@ $num_bytes=$new_size-$old_size;
 
 
 
+
 // HELP create event when right mousebutton is clicked param must be one string example : see $my_args 
 function WIG_right_click($my_args = "WIG_container=cmd=WIG_menu|%|my_option=h-menu|||txt_tablename=h-menu2.dat" )
 {
@@ -288,7 +303,7 @@ function WIG_right_click($my_args = "WIG_container=cmd=WIG_menu|%|my_option=h-me
 function WIG_tooltip($given_option = "none")
 {
 if( !isset($given_option) || empty($given_option) ){$given_my_option="none";}	
-if(preg_match('/^OF/',$given_option) == 1 ){$_SESSION["W_tooltip"]="OF";WIG_save_session_vars();}
+if(preg_match('/^OFF/',$given_option) == 1 ){$_SESSION["W_tooltip"]="OFF";WIG_save_session_vars();}
 if(preg_match('/^ON/',$given_option) == 1 ){$_SESSION["W_tooltip"]="ON";WIG_save_session_vars();}		
  if(preg_match('/^ON/',$_SESSION["W_tooltip"]) == 1 )
  {
@@ -381,14 +396,15 @@ $seconds = round($timer / 1000, 0, PHP_ROUND_HALF_UP);$timer=$seconds . "s";
 // HELP show progressbar with timer => WIG_progress("timer=2500")
 function WIG_progress()
 {
-$GLOBALS["WAR_progress"]=["timer"=> "5000","class" =>"my_progress fg-red bg-red","width"=>"02%","height"=>"5px"];
+$GLOBALS["WAR_progress"]=["timer"=> "5000","class" =>"my_progress fg-red bg-red","width"=>"01%","height"=>"5px"];
 $GLOBALS["WAR_progress"]=array_merge($GLOBALS["WAR_progress"],func_get_args());
 $my_style=WIAG_bs($GLOBALS["WAR_progress"]);
 $timer=$GLOBALS["WAR_progress"]["timer"];
+// WIG_msg("txt=$my_style");
 echo "<div><div data-role=\"progress\" $my_style >";
 // echo "<div data-role=\"progress\" class=\"my_progress bg-light-blue\" style=\"width:0%;height:5px\">";
 echo "<script>$(\".my_progress\").animate({width: \"100%\",}, $timer);</script>";
-WIG_progres("timer=$timer");
+// WIG_progres("timer=$timer");
 echo "</div></div>";
 }
 
@@ -623,7 +639,7 @@ switch( $my_option )
 
 
 // HELP testscript for ajax calls
-function WIG_d($d_action = null)
+function WIG_d_old($d_action = null)
 {
 $my_txt="";
 if( !isset($d_action ) || empty($d_action )){$d_action="none_existing";}
@@ -697,17 +713,22 @@ if( !isset($_SESSION[$var_name]) || empty($_SESSION[$var_name])){$_SESSION[$var_
 if( !isset($GLOBALS[$var_name]) || empty($GLOBALS[$var_name])){$GLOBALS[$var_name]="none";}
 $_SESSION[$var_name]=$var_value;
 $GLOBALS[$var_name]=$var_value;
-WIG_toastr("set_var : $var_name => $var_value ");
+// WIG_toastr("set_var : $var_name => $var_value ");
 WIG_save_session_vars();
 WIAG_bs_exec($GLOBALS["$my_function"]);
 }
 
-
 // HELP clean url 
-function WIG_clean_url()
+function WIG_clean_url($given_option = "none")
 {
-if ( preg_match('(ON|on)', $_SESSION["W_clean_url"] ) == 1  )	
-{echo '<script type="text/javascript">history.replaceState(null, "", location.href.split("?")[0]); </script>';}
+if( !isset($given_option) || empty($given_option) ){$given_my_option="none";}	
+if(preg_match('/^OFF/',$given_option) == 1 ){$_SESSION["W_clean_url"]="OFF";WIG_save_session_vars();}
+if(preg_match('/^ON/',$given_option) == 1 ){$_SESSION["W_clean_url"]="ON";WIG_save_session_vars();}		
+if ( preg_match('(ON|on)', $_SESSION["W_clean_url"] ) == 1  )
+{
+// echo "<br> clean_url is done : " . $_SESSION["W_clean_url"];
+echo '<script type="text/javascript">history.replaceState(null, "", location.href.split("?")[0]); </script>';
+}
 }
 
 // HELP own error handler if needed see line 97 to enable it +  when DEBUG=ON
@@ -747,10 +768,12 @@ function WIG_reset_dat_file($dat_file = null)
 
 
 // HELP reload page + clean url
-function WIG_reload()
+function WIG_reload($delay = 1000)
 {
  if ( preg_match('(ON|on)', $_SESSION["W_reload"] ) == 1  )	
- {echo '<script type="text/javascript">setTimeout(location.reload.bind(location), 1000);</script>';WIG_clean_url();}
+ {echo "<script type=\"text/javascript\">setTimeout(location.reload.bind(location), $delay);</script>";WIG_clean_url();}
+ else
+ { WIG_log("!!! reload is turned OFF");}
 }
 
 
@@ -928,43 +951,59 @@ echo "<style> [div*=\"$my_name\"] ,[id*=\"$my_name\"] ,[class*=\"WIG\"] {border-
 }
 
 
+
+
+// jos
 // HELP create a form 2 args see below default settings 
 function WIG_create_form($form_record = "W_", $form_action = "WIG_save_session_vars" )
 {
 WIG_reset_global_vars();
 $my_function=__FUNCTION__;$my_function=str_replace("WIG","WAR","$my_function");	
-$GLOBALS["$my_function"]=array_merge($GLOBALS["$my_function"],func_get_args());
+// $GLOBALS["$my_function"]=array_merge($GLOBALS["$my_function"],func_get_args());
 $GLOBALS["$my_function"]["data-role"]="select";$GLOBALS["$my_function"]["w_select"]="w_select_1%%%w_select_2%%%w_select_3%%%w_select_4%%%w_select_5";
 $GLOBALS["$my_function"]["data-clear-Button"]="true";$GLOBALS["$my_function"]["data-filter"]="true";$GLOBALS["$my_function"]["data-filter-placeholder"]="Search : ";
 $GLOBALS["$my_function"]["data-use-placeholder"]="true";
-$GLOBALS["$my_function"]["style"]="NO";
+$GLOBALS["$my_function"]["style"]="NO";$GLOBALS["$my_function"]["empty"]="NO";
+$GLOBALS["$my_function"]["DEBUG"]="ON";
+$GLOBALS["$my_function"]=array_merge($GLOBALS["$my_function"],func_get_args());
 $my_style=WIAG_bs($GLOBALS["$my_function"]);
+// foreach ($GLOBALS["$my_function"] as $key => $value){echo "WWWWW: $key => $value <br>"; }
 $class=$GLOBALS["$my_function"]["class"];
 if( empty($form_record) && isset($_SESSION["form_record"] ) && !empty($_SESSION["form_record"]) ){$form_record=$_SESSION["form_record"] . " form_record form_action";}
 if( empty($form_action) && isset($_SESSION["form_action"]) && !empty($_SESSION["form_action"]) ){$form_action=$_SESSION["form_action"];}
 
 if( !isset($form_record ) || empty($form_record) ){return;}
 if( !isset($form_action ) || empty($form_action) ){return;}
+
 // there is some action todo _start so add the buttons	
-if (function_exists($form_action))
+if (function_exists($form_action) || !function_exists($form_action) )
 {
 $new_id="WIG_form" . round(microtime(true) * 1000);usleep(10);
+$new_name="WIG_name" . round(microtime(true) * 1000);usleep(10);
 $post_scriptname=basename($_SERVER["SCRIPT_FILENAME"]);
-echo "<form class='form' action=$post_scriptname id=$new_id enctype='multipart/form-data' method='post'>";
-echo "<button type=submit name=\"$form_action\" class=\"fg-blue bg-red\">Submit</button>";
-echo "<button type=normal onclick=\"window.location.href();return false;\" class=\"fg-green bg-light-blue\">cancel</button>"; 
-echo '<input type="checkbox" data-role="theme-switcher" data-state="dark"/>';
+echo "<form class='form' id=$new_id enctype='multipart/form-data' method='post'>";
+// echo "<form class='form' action=$post_scriptname id=$new_id enctype='multipart/form-data' method='post'>";
+echo "<br>current username :" . $_SESSION["username"]. " , password :" . $_SESSION["password"] . " , action : $form_action"  ;
+// echo "<button type=submit name=\"$form_action\" class=\"fg-blue bg-red\">Submit</button>";
+echo "<button type=submit name=\"form_action_$new_id\" class=\"fg-blue bg-red\">Submit</button>";
+// echo "<button type=normal onclick=\"window.location.href();return false;\" class=\"fg-green bg-light-blue\">cancel</button>"; 
+echo "<button type=reset onclick=\"window.location.assign('$post_scriptname');return false;\" class=\"fg-green bg-light-blue\">cancel</button>"; 
+
+// echo '<input type="checkbox" data-role="theme-switcher" data-state="dark"/>';
+
 }
+
 foreach(explode(" ",$form_record) as $var)
 {
-echo "<br> var => $var ";
+// echo "<br> var => $var ";GLOBALS["$my_function"]["empty"]
 $my_old_value="empty";
-if( !isset($_SESSION["$var"]) )
+if( !isset($_SESSION["$var"])  )
  {$_SESSION["$var"]="";$my_old_value=$_SESSION["$var"];}
 else
  $my_old_value=$_SESSION["$var"];
- // echo "<div class=\"form-group\">";
- //  echo "<label for=\"usr\">$var</label>";
+ if( preg_match('/^YES/', $GLOBALS["$my_function"]["empty"]) )
+ {$my_old_value="";}
+ echo "<br> var : $var";
 if ( strlen($var) >=2 )
 {
 switch($var)
@@ -978,7 +1017,8 @@ switch($var)
   case 1 == preg_match('(calendar|date)', $var):
    echo " value => $my_old_value";
    echo "<div class=\"form-group\">";
-   echo "<input data-role='date-picker' type=\"text\" class=\"form-control\" id=\"$var\" name=\"$var\" value=\"$my_old_value\" >";
+   // echo "<div><input data-role='calendar' type=\"text\" class=\"calendar form-control\" id=\"$var\" name=\"$var\" value=\"$my_old_value\" ></div>";
+   echo "<input data-role='date-picker' type=\"text\" class=\"form-control\" data-label=\"Select date\" id=\"$var\" name=\"$var\" value=\"$my_old_value\" >";
    echo "</div>";
   break;
   
@@ -993,33 +1033,50 @@ switch($var)
    echo " value => $my_old_value";
    $my_array=explode("%%%",$GLOBALS["$my_function"]["w_select"]);
    echo "<div class=\"form-group\" >";
+   // echo "<select type=\"text\" data-role=\"select\" data-clear-button=\"true\" data-filter=\"true\" data-filter-placeholder=\"Search ...\"> class=\"form-control\" name='$var' value='$my_old_value' id=\"$var\">";
    echo "<select type=\"text\" data-role=\"select\" class=\"form-control\" name='$var' value='$my_old_value' id=\"$var\">";
    echo "<option value=\"$my_old_value\">$my_old_value</option>";
    $my_array=explode("%%%",$GLOBALS["$my_function"]["w_select"]);
+   if ( isset( $GLOBALS["$my_function"]["$var"])){$my_array=explode("%%%",$GLOBALS["$my_function"]["$var"]);}
    foreach ($my_array as $key => $value)
 	{echo "<option  value=\"$value\">$value</option>";}
-   echo "</select>";
+    echo "</select>";  
    echo "</div>";
   break;
-  
-  
-  
+    
   case 1 == preg_match('/color/', $var) &&  preg_match('/^W_/', $var) :
    echo "<div class=\"form-group\">";
-   echo "<input type=\"text\" class=\"form-control\" name='$var' value='$my_old_value' id=\"$var\">";
+   echo "<input type=\"text\" data-clear-button=\"true\" class=\"form-control\" name='$var' value='$my_old_value' id=\"$var\">";
    echo "</div>";
   break;
    
   default:
   echo "<div class=\"form-group\">";
-   echo "<input type=\"text\" class=\"form-control\" name='$var' value='$my_old_value' id=\"$var\">";
+   echo "<input type=\"text\" data-clear-button=\"true\" class=\"form-control\" name='$var' value='$my_old_value' id=\"$var\">";
    echo "</div>";
-  break;   
+  break; 
+
+  
   }
  }
 }
 
+
+echo "<div class=\"form-group\">";
+   echo "<input type=\"text\" hidden=\"false\" class=\"form-control\" name='cmd' value='$form_action' id=\"action_id\">";
+    echo "</div>";
+
+
+if ( preg_match('/WIG_save_session_vars/',$form_action) == 1 )
+{
+ echo "<div class=\"form-group\">";
+ echo "<input type=\"hidden\" class=\"form-control\" name='WIG_reload' value='WIG_reload' id=\"WIG_reload_twice\">";
+ echo "</div>";
+}
+
+
 echo "</form>";
+// for debug WIG_info();
 }
 
 
@@ -1293,22 +1350,24 @@ switch( $my_option )
 // HELP save current session var's beginning with W_ so each page resfresh the value is kepted
 function WIG_save_session_vars()
 {
+// echo "<br>WIG SAVE BACKTRACE<pre>";print_r(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS,1));echo "</pre>";
 reset($_SESSION);
-$my_include=$_SESSION["username"] . "_incl_session_var.php";
-$myfile = fopen("$my_include", "w+") or trigger_error("Unable to open file!");
+$_SESSION["my_include"]=$_SESSION["DATA"] . "/" . $_SESSION["username"] . "_incl_session_var.php";$my_include=$_SESSION["my_include"];
+$myfile = fopen("$my_include", "w") or trigger_error("Unable to open file!");
 fwrite($myfile,"<?php\n");
  foreach ($_SESSION as $key => $value)
   {
    if (gettype($value) != "array" )
-	 {if( preg_match('/W_/', $key) == 1 && strlen($key) >=2  && strlen($value) >=1 ){fwrite($myfile,"\$_SESSION[\"$key\"]=\"$value\";\n");}}
+     {if( preg_match('/^W_/', $key) == 1 && strlen($key) >=2  && strlen($value) >=1 ){fwrite($myfile,"\$_SESSION[\"$key\"]=\"$value\";\n");}}
   }
  foreach ($GLOBALS as $key => $value)
   {	
    if (gettype($value) != "array" )
-	 {if( preg_match('/W_/', $key) == 1 && strlen($key ?? '') >=2  && strlen($value ?? '') >=1 ){fwrite($myfile,"\$GLOBALS[\"$key\"]=\"$value\";\n");}}
+	 {if( preg_match('/^W_/', $key) == 1 && strlen($key ?? '') >=2  && strlen($value ?? '') >=1 ){fwrite($myfile,"\$GLOBALS[\"$key\"]=\"$value\";\n");}}
   }
 fwrite($myfile,"?>");
 fclose($myfile);
+
 }	
 
 
@@ -1368,11 +1427,6 @@ if ( $my_action == "none" )
 $my_id="'" . $my_id . "'";$my_delay="'" . $my_delay . "'";
 // WIG_toast("txt=wig_show_hide => $my_id");
 echo "<script type=\"text/javascript\">  $(document).ready(function() { JAV_show_hide($my_id,$my_action,$my_delay); } );</script>";
-// echo "<br> calling now : JAV_show_hide('WIG_clock')";
-// echo "<script type=\"text/javascript\">JAV_show_hide('WIG_clock');</script>";  
-// WIG_toastr("txt=<br><br>JAV_show_hide($my_id,$my_action,$my_delay)","my_pos=tr","delay=500","width=400px");
-// $to_send="JAV_show_hide($my_id,$my_action,'7s')";
-// WIG_toast("txt=<br><br>$to_send","my_pos=tr","delay=500","width=400px");
 // CORRECT => echo "<script type=\"text/javascript\">JAV_show_hide('WIG_clock','slideInLeft','7s');</script>";  
 }
 
@@ -1386,27 +1440,25 @@ echo "<br> functions <br>";
 echo "<br>";
 }
 
-
-// HELP show _POST,_GET ,_SESSION , functions n vars for debug reason my_option=any funtion beginning with WIG_*
+// HELP WIG_debug call with JAV_Wp and button WIG_btn("caption=wig_debug","cmd=JAV_p=WIG_debug|||my_option=all");
+// HELP WIG_debug("-help"); => help or ?WIG_debug=my_option=all 
+// HELP WIG_debug => ?WIG_container=class=info|||cmd=WIG_debug|||my_option=all
+// HELP call WIG_debug("my_option=all","class=info"); => my_option = all,post,get,session,globals,server,function,vars
 function WIG_debug()
 {
 WIG_reset_global_vars();
-$GLOBALS["WAR_debug"]=["my_option"=> "all" ,"rows" => "1" , "color" => "bmack !important" , "background-color" => "lightblue !important",
-"overflow"=>"scroll","border-width" => "1px","border-color" => "blue !important","border-style" => "solid"];
-$my_array=array();
-// $my_array=array_merge($GLOBALS["WAR_debug"],$my_args);
-if ( count(func_get_args()) > 0 ){	$GLOBALS["WAR_debug"]=array_merge($GLOBALS["WAR_debug"],func_get_args());}
-
-$my_style=WIAG_bs($GLOBALS["WAR_debug"]);
-$my_option=$GLOBALS["WAR_debug"]["my_option"];
+$my_function=__FUNCTION__;$my_function=str_replace("WIG","WAR","$my_function");
+$GLOBALS["$my_function"]=array_merge($GLOBALS["$my_function"],func_get_args(),get_defined_vars());
+$my_style=WIAG_bs($GLOBALS["$my_function"]);$my_option=$GLOBALS["WAR_debug"]["my_option"];
 $new_id="WIG_debug" . round(microtime(true) * 1000);usleep(100);
-$final_result="";$counter=0;
-$final_array=array();
+echo "<p $my_style> my_option : $my_option <br></p>";
+
+$final_result="";$counter=0;$final_array=array();
  if( preg_match('(post|POST|all)',$GLOBALS["WAR_debug"]["my_option"] ) == 1 )
- {reset($_POST);foreach ($_POST as $key => $value){ $final_array+=["POST : $key" => "$value" ];}}
+ {reset($_POST);$final_array+=["POST : <br>" ];foreach ($_POST as $key => $value){ $final_array+=["POST : $key" => "$value" ];}}
 
 if( preg_match('(get|GET|all)', $GLOBALS["WAR_debug"]["my_option"] ) == 1 )
- {reset($_GET);foreach ($_GET as $key => $value){ $final_array+=["GET : $key" => "$value" ];;}}
+ {reset($_GET);$final_array+=["GET : <br>" ];foreach ($_GET as $key => $value){ $final_array+=["GET : $key" => "$value" ];;}}
 
 if( preg_match('(SESSION|session|all)', $GLOBALS["WAR_debug"]["my_option"] ) == 1 )
  {reset($_SESSION);foreach ($_SESSION as $key => $value){ $final_array+=["SESSION : $key" => "$value" ];}}
@@ -1425,9 +1477,19 @@ if( preg_match('(SESSION|session|all)', $GLOBALS["WAR_debug"]["my_option"] ) == 
  if( preg_match('(server|SERVER|all)', $GLOBALS["WAR_debug"]["my_option"] ) == 1 )
  {reset($_SERVER);foreach ($_SERVER as $key => $value){ $final_array+=["SERVER : $key" => "$value" ];}	}
  
+  if( preg_match('(function|FUNCTION|all)', $GLOBALS["WAR_debug"]["my_option"] ) == 1 )
+ {
+  $my_array=get_defined_functions();
+  foreach ($my_array["user"] as $key => $value)
+  {
+   if (gettype($value) != "array" )		
+	 $final_array+=["funtion : $key" => "$value" ];
+    else
+	 $final_array+=["function : !!! ARRAY !!!" => "$key" ];
+   }	  
+ }
  
- 
- if( preg_match('(function|FUNCTION|all)', $GLOBALS["WAR_debug"]["my_option"] ) == 1 )
+ if( preg_match('(vars|VARS|all)', $GLOBALS["WAR_debug"]["my_option"] ) == 1 )
  {
   foreach (get_defined_vars() as $key => $value)
   {
@@ -1439,6 +1501,7 @@ if( preg_match('(SESSION|session|all)', $GLOBALS["WAR_debug"]["my_option"] ) == 
  }
  
 echo "<table class=table table-bordered $my_style ><tbody $my_style >";
+
 echo "<tr $my_style>";
 	
 	 foreach ($final_array as $key => $value)
@@ -1454,7 +1517,7 @@ echo "</tbody></table>";
 
 
 // HELP show _POST , _SESSION using javascript
-function WIG_info($given_option = null)
+function WIG_info_old($given_option = null)
 {
 if( !isset($given_option) || empty($given_option) ){$given_my_option="jav";}	
 WIG_clean_url();
@@ -1500,25 +1563,30 @@ else
 echo "$show_msg";
 }
 
-
+// HELP WIG_help example : ?WIG_help=my_help=WIG_debug
+// HELP show some help call  => WIG_help("my_help=WIG_debug","class=fg-white bg-blue");
 function WIG_help()
 {
-WIG_reset_global_vars();	
-$GLOBALS["WAR_help"]=array_merge($GLOBALS["WAR_help"],func_get_args());
-$my_style=WIAG_bs($GLOBALS["WAR_help"]);$my_function=$GLOBALS["WAR_help"]["my_help"];
-$my_class=$GLOBALS["WAR_help"]["class"];
-// if(preg_match('/^function/',$my_function) == 1 ){$my_function="'(" . $my_function . ")'";}
-// did not found function 
+WIG_reset_global_vars();
+$function=__FUNCTION__;$function=str_replace("WIG","WAR","$function");
+$GLOBALS["$function"]=array_merge($GLOBALS["WAR_metro"],$GLOBALS["$function"],func_get_args());
+$my_style=WIAG_bs($GLOBALS["$function"]);$my_function_orig=$GLOBALS["$function"]["my_help"];
+$my_function=$GLOBALS["$function"]["my_help"];$my_class=$GLOBALS["$function"]["class"];
+$my_delay=intval($GLOBALS["$function"]["delay"]);$animation=$GLOBALS["$function"]["animation"];
+usleep(100);$time_end=round(microtime(true) * 1000);$new_id="$my_function" . "_" . "$time_end";
 if(substr_count($my_function, "function" ) == 0 ){$my_function="'(" . "^function " . $my_function . ")'";}
 // found more then one string 'function'
 if(substr_count($my_function, "function" ) > 1 ){$my_function="'(" . $my_function . ")'";}
-
-// foreach ($GLOBALS["WAR_help"] as $key => $value){echo "<br> WAR_HELP :$key => $value";}
-// echo "<br>WIAG_BS exec <pre>";print_r(debug_backtrace());echo "</pre>";
 $new_id="WIG_help" . round(microtime(true) * 1000);usleep(10);	
-$prev_line="";$result="";$msg_txt="";
+$prev_line="";$result="";$msg_txt="";$more_lines="";
 echo "<div $my_style id=\"$new_id\" >";	
-echo "<br> Search for : $my_function <br>";
+// echo "$my_style";
+echo "Search for : $my_function <br>";
+if ( $my_delay < 1000 ){echo "<script type=\"text/javascript\">$(document).ready(function() { JAV_show('$new_id','$animation');} );</script>";}	
+if ( preg_match('/^YES/', $GLOBALS["$function"]["close_btn"]) == 1  )
+{WIG_btn("caption=X","cmd=JAV_hide|||$new_id|||none|||5s","top=10px","right=10px","position=absolute","background-color=red !important");}
+ WIAG_bs_exec($GLOBALS["$function"]);
+
 
 foreach ($included_files=get_included_files() as $my_helpfile)	
  {
@@ -1528,13 +1596,14 @@ $fn = fopen("$my_helpfile","r");
 	   $result = fgets($fn);
 	 switch( $result )
 {
-case 1 == preg_match('/\/\/ HELP/',$result):
+case 1 == preg_match('(\/\/ HELP)',$result):
 $prev_line=$result;
+if ( preg_match( "/\/\/ HELP $my_function_orig/" ,$result)  )
+{$more_lines="<br>$more_lines" . "$result<br>";}	
 break;	
 
 case 1 ==  preg_match($my_function,$result):
-$msg_txt="$prev_line <br> $result<br>";
-
+$msg_txt="$more_lines $prev_line <br> $result<br>";
 if ( preg_match('/\/\/ HELP/',$msg_txt) == 1 )
 {
  $get_function=str_replace("function ","","$result");
@@ -1560,11 +1629,40 @@ break;
     }	 
 fclose($fn);
 }
+
 echo "</div>";
+// if ( $my_delay > 1000 ){echo "<script type=\"text/javascript\">JAV_show_hide('$new_id','$animation','$seconds');</script>";}
 }
 
+// HELP crypt var it returns encrypted text example $_SESSION["W_test"]=WIAG_crypt("text to be crypted")
+function WIAG_crypt()
+{
+	foreach (func_get_args() as $key => $value);
+ // $my_array=get_defined_functions();echo reset($my_array["user"]);
+  $ciphering="AES-128-CBC";$iv_length = openssl_cipher_iv_length($ciphering);$iv=openssl_random_pseudo_bytes($iv_length);
+   $encrypted = openssl_encrypt($value, $ciphering, $_SESSION["password"] , 0, $iv);
+   $encryptedData = base64_encode($iv . $encrypted);unset($ciphering,$iv_length,$iv,$encrypted);
+	return $encryptedData;
+}
+
+// HELP decrypt var it returns decrypted text example _SESSION["W_test"]=WIAG_decrypt($_SESSION["W_test"])!! $_SESSION["password"] must be correct 
+function WIAG_decrypt()
+{
+foreach (func_get_args() as $key => $value);	
+ $encryptedData=base64_decode($value);
+	 $ciphering="AES-128-CBC";$iv_length=openssl_cipher_iv_length($ciphering);$iv=substr($encryptedData, 0, $iv_length);
+      $encrypted=substr($encryptedData, $iv_length);
+     $decrypted = openssl_decrypt($encrypted,$ciphering, $_SESSION["password"], 0, $iv);unset($ciphering,$iv_length,$iv,$encrypted);
+    // echo "<br>decrypted : $decrypted";
+	return $decrypted;	
+}
+
+
+
+
+
 // HELP check to see what is posted 
-function WIG_POST()
+function WIAG_POST()
 {
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST))
   { 
@@ -1579,7 +1677,7 @@ $my_date=date("d/m/Y : H:i:s", time());
 $my_result="$my_date : POST : user :" . $_SESSION["username"] . ",";
     foreach ($_POST as $POST_var => $POST_value)
 	 {
-	  if ( preg_match('(cmd|exec)',$POST_var ) == 1 || preg_match('(cmd|exec)',$POST_value ) == 1 && preg_match('(ON|on)', $_SESSION["W_logger"] ) == 1 )
+	  // if ( preg_match('(cmd|exec)',$POST_var ) == 1 || preg_match('(cmd|exec)',$POST_value ) == 1 && preg_match('(ON|on)', $_SESSION["W_logger"] ) == 1 )
 	  $my_result=$my_result . "$POST_var => $POST_value ,";
 	 }
 WIG_log("$my_result");
@@ -1589,6 +1687,14 @@ foreach ($_POST as $POST_var => $POST_value)
 		// echo "POST_var : $POST_var  , POST_value : $POST_value <br>";
 		if( empty($POST_value)){$POST_value="empty";}
 		if( empty($POST_var)){$POST_var="empty";}
+		
+		if(  preg_match('/^W_/', $POST_var) == 1 )
+		{
+		 $_SESSION[$POST_var]=$POST_value;
+		 // WIG_save_session_vars();
+		 //  WIG_toast("txt=set : $POST_var <br> value : $POST_value","delay=13000","class=bg-light-red fg-white","my_pos=tr","width=200px");
+		 }
+		
 		
 		if(  preg_match('/^JJJJJJAV_/', $POST_value) == 1 )
 		  {
@@ -1605,20 +1711,19 @@ foreach ($_POST as $POST_var => $POST_value)
 		  }	
 	 }
 
-
 $GLOBALS["WAR_exec"]=$_POST;
-// jos changed on 05/01/2026
+// >>>F changed on 05/01/2026
 $GLOBALS["WAR_exec"]=array_merge($GLOBALS["WAR_exec"],func_get_args());	
 WIAG_bs($GLOBALS["WAR_exec"]);
 WIAG_bs_exec($GLOBALS["WAR_exec"]);
-	 reset($_POST);
+reset($_POST);
  }	
 }
 
 
 
 // check if GET is called with params example : ?WIG_toastr=txt=hello
-function WIG_GET()
+function WIAG_GET()
 {
  if ($_SERVER['REQUEST_METHOD'] == 'GET' && !empty($_GET) )
  {
@@ -1626,7 +1731,7 @@ function WIG_GET()
   $my_result="$my_date : GET : user :" . $_SESSION["username"] . ",";
    foreach ($_GET as $GET_var => $GET_value)
 	  {
-	 if ( preg_match('(ON|on)', $_SESSION["W_logger"] ) == 1  )
+	// if ( preg_match('(ON|on)', $_SESSION["W_logger"] ) == 1  )
 	  $my_result=$my_result . "$GET_var => $GET_value ,";
 	 } 
 WIG_log("GET : $my_result");	
@@ -1659,19 +1764,21 @@ WIG_log("GET : $my_result");
 	 // echo "<br> 2 my_click $my_click ";
 		  
           reset($_GET);
+		  // unset($_GET);
           WIG_clean_url();	 
           return;		  
 		  }	
 	$GLOBALS["WAR_exec"]=$_GET;
-    $GLOBALS["WAR_exec"]=array_merge($GLOBALS["WAR_exec"],func_get_args());	
-    WIAG_bs($GLOBALS["WAR_exec"]);
-	// echo "<pre>";print_r(var_dump($GLOBALS["WAR_exec"]));echo "</pre>";
+   $GLOBALS["WAR_exec"]=array_merge($GLOBALS["WAR_exec"],func_get_args());	
+     WIAG_bs($GLOBALS["WAR_exec"]);
+	// echo "<pre>GETT : ";print_r(var_dump($GLOBALS["WAR_exec"]));echo "</pre>";
     WIAG_bs_exec($GLOBALS["WAR_exec"]);
 	reset($_GET);
     WIG_clean_url();
     //WIG_toast("wig_get"); 
     // WIG_d();	
   }	
+ // unset($_GET);
 }
 
 }
@@ -1716,20 +1823,7 @@ function WIG_err_msg ($user_err_msg = null)
   }
  }	
 
-// HELP return crypted user pwd
-function WIG_crypt_pwd ($crypt_user_pwd = null)
- {	  
-  $new_crypt_user_pwd=hash('sha256',bin2hex("$crypt_user_pwd"));
-//  return the crypted pwd 
-  return hash('sha256',bin2hex("$crypt_user_pwd"));
- }
- 
-// HELP return + show user pwd + crypted user pwd 
- function WIG_crypt_pwd_show ($crypt_user_pwd = null)
- {   
-  WIG_modal("<br> old : $crypt_user_pwd new : " . hash('sha256',bin2hex("$crypt_user_pwd")) . " <br>" );
-  return hash('sha256',bin2hex("$crypt_user_pwd"));
- }
+
 
 // HELP function java/html to show buttom to scroll page to top
 function WIG_go_up($given_option = "none")

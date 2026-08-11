@@ -4,8 +4,112 @@ ini_set('display_errors', 'On');
 error_reporting(E_ALL);
 
 // functions start here
+
+
+// HELP WIG_user to execute use => WIG_user("my_option=login");
+// HELP function to log/in/out my_option=create,login,logout
+function WIG_user()
+{
+WIG_reset_global_vars();$my_function=__FUNCTION__;$my_function=str_replace("WIG","WAR","$my_function");
+// merge arrays + set to hidden
+$GLOBALS["$my_function"]=array_merge($GLOBALS["WAR_metro"],func_get_args());$my_style=WIAG_bs($GLOBALS["$my_function"]);$GLOBALS["$my_function"]["visibility"]="hidden";
+// set some params based on the option
+switch( $GLOBALS["$my_function"]["my_option"] )
+  {
+    case 1 == preg_match('/^create/', $GLOBALS["$my_function"]["my_option"]):
+	$GLOBALS["$my_function"]["width"]="50%";$GLOBALS["$my_function"]["class"]="bg-light-green fg-blue";$GLOBALS["$my_function"]["height"]="600px";
+	 break;
+	case 1 == preg_match('/^login/', $GLOBALS["$my_function"]["my_option"]):
+	$GLOBALS["$my_function"]["width"]="40%";$GLOBALS["$my_function"]["class"]="bg-light-green fg-blue";$GLOBALS["$my_function"]["height"]="300px";
+	 break;
+	 case 1 == preg_match('/^logout/', $GLOBALS["$my_function"]["my_option"]):
+	$GLOBALS["$my_function"]["width"]="200px";$GLOBALS["$my_function"]["class"]="bg-light-red fg-blue";$GLOBALS["$my_function"]["height"]="150px";
+	 break; 
+	 case 1 == preg_match('/^check_login/', $GLOBALS["$my_function"]["my_option"]):
+	$GLOBALS["$my_function"]["width"]="200px";$GLOBALS["$my_function"]["class"]="bg-light-red fg-blue";
+	$GLOBALS["$my_function"]["height"]="150px";$GLOBALS["$my_function"]["delay"]="15000";$GLOBALS["$my_function"]["my_pos"]="right";
+	 break; 
+	 default :
+	 $GLOBALS["$my_function"]["^width"]="100%";$GLOBALS["$my_function"]["class"]="bg-light-red fg-green";$GLOBALS["$my_function"]["height"]="500px";
+	  // echo "!!! default !!!wrong option must be : login,logout,reset";
+	 break;
+  }
+ // merge given arguments if any 
+$GLOBALS["$my_function"]=array_merge($GLOBALS["$my_function"],func_get_args());
+$my_delay=intval($GLOBALS["$my_function"]["delay"]);$my_txt=$GLOBALS["$my_function"]["txt"];
+usleep(100);$time_end=round(microtime(true) * 1000);$new_id="$my_function" . "_" . "$time_end";
+$seconds=round($my_delay / 1000, 0, PHP_ROUND_HALF_UP);$seconds=$seconds . "s";$animation=$GLOBALS["$my_function"]["animation"];
+// set the final style 
+$my_style=WIAG_bs($GLOBALS["$my_function"]);
+echo "<div $my_style id=\"$new_id\" >";	
+
+switch( $GLOBALS["$my_function"]["my_option"] )
+  {
+    case 1 == preg_match('/^login/', $GLOBALS["$my_function"]["my_option"]):
+	 WIG_create_form("username password", "WIG_user|||my_option=check_login","empty=YES");
+	 break;
+	case 1 == preg_match('/^create/', $GLOBALS["$my_function"]["my_option"]):
+	 WIG_create_form("username password street country age birth_date","empty=YES", "WIG_user|||my_option=encrypt_password");
+	 break;
+	 // jos
+	 case 1 == preg_match('/^encrypt_password/', $GLOBALS["$my_function"]["my_option"]):
+	 {
+		// user exist already 
+		$my_include=$_SESSION["DATA"] . "/" . $_SESSION["username"] . "_incl_session_var.php";
+	 if ( file_exists($my_include) )
+	 {$_SESSION["username"]="none";$_SESSION["password"]="none";echo "<h1>user already exist </h1>";WIG_reload("5000");break;}
+	  foreach (explode(" ","username password street country age birth_date") as $i )
+	  {if(!isset($_SESSION["$i"] ) || empty($_SESSION["$i"]) ){$_SESSION["$i"] = "none";}} 
+	   $_SESSION["W_password"]=WIAG_crypt($_SESSION["password"]);WIG_save_session_vars();
+	   foreach (explode(" ","username password street country age birth_date") as $i )
+	   {echo "<br>$i : " . $_SESSION["$i"];}
+	   WIG_reload("15000");
+	 }
+	 break;
+	 
+	 case 1 == preg_match('/^check_login/', $GLOBALS["$my_function"]["my_option"]):
+	 $given_pwd=$_SESSION["password"];
+	 $current_pwd=WIAG_decrypt($_SESSION["W_password"]);
+	 $my_include=$_SESSION["DATA"] . "/" . $_SESSION["username"] . "_incl_session_var.php";
+	 if ( !file_exists($my_include) )
+	 {$_SESSION["username"]="none";$_SESSION["password"]="none";echo "<h1>user does not exist </h1>";WIG_reload("5000");break;}
+	 if ( preg_match("/$given_pwd/", $current_pwd ) == 1 )
+	 {echo "<h1>WELCOME =>" . $_SESSION["username"] . "<br>PASSWORD OK " . "</h1>";WIG_reload("8000");break;}
+    else
+	 {echo "<h1>WRONG PASSWORD =>" . $_SESSION["username"] . "set to user none </h1>";$_SESSION["password"]="none";$_SESSION["user"]="none";WIG_reload("5000");break;}
+		 
+	 
+	 break;
+	 
+	 case 1 == preg_match('/^logout/', $GLOBALS["$my_function"]["my_option"]):
+	 echo "<br><br>";
+	 WIG_btn("caption=logout","cmd=WIG_logout");
+	 break;
+	 default :
+	 echo "<br> given option " . $GLOBALS["$my_function"]["my_option"] . "<br>";
+	 echo "<br> <br> wrong option  => my_option=create,login,logout";
+	 echo "<br> to execute use => WIG_user(\"my_option=login\");";
+	 echo "<br> <br>  for help use WIG_help(\"my_help=WIG_user\");<br> or https://..../?WIG_help=my_help=WIG_user <br>";
+	 break;
+  }
+
+if ( $my_delay > 1000 ){WIG_progress("timer=$my_delay");WIG_progres("timer=$my_delay");}
+// echo "$my_txt<br>";
+// foreach ($GLOBALS["$my_function"] as $key => $value){echo "<br> 1 wig_msg key :$key => $value";}
+// WIAG_bs_exec($GLOBALS["$my_function"]);
+// WIG_btn("caption=modify session var","cmd=WIG_container|||z-index=10000|||class=bg-light-blue fg-green|||exec=WIG_change_session_var","class=g-light-blue fg-green");
+// WIG_btn("caption=set user to admin","cmd=WIG_set_var|||username|||admin","exec=WIG_reload");
+// foreach ($GLOBALS["$my_function"] as $key => $value){echo "<br> 2 wig_msg key :$key => $value";}
+if ( preg_match('/^YES/', $GLOBALS["$my_function"]["close_btn"]) == 1  )
+{WIG_btn("caption=X","cmd=JAV_hide|||$new_id|||none|||5s","top=10px","right=10px","position=absolute","background-color=red !important");}
+echo "</div>";
+if ( $my_delay > 1000 ){echo "<script type=\"text/javascript\">JAV_show_hide('$new_id','$animation','$seconds');</script>";}
+if ( $my_delay < 1000 ){echo "<script type=\"text/javascript\">$(document).ready(function() { JAV_show('$new_id','$animation');} );</script>";}		
+}
  
- // HELP create selection box WIG_select("w_select=WIG_hello%%%1%%%two%%%three%%%four")
+ 
+
+// HELP create selection box WIG_select("w_select=WIG_hello%%%1%%%two%%%three%%%four")
  function WIG_select()
  {
 WIG_reset_global_vars();
@@ -30,12 +134,13 @@ foreach ($GLOBALS["$my_function"] as $key => $value)
 				 {echo "<option class=\"$class\" value=\"$my_array[$i]\">$my_array[$i]</option>";}
 			   }    
    }
-
  echo "</select>";
 // echo "</div>";	 
  }
  
-// HELP create dropdown menu call like this WIG_dropdown("caption=drop_test","w_dropdown=WIG_msg|||txt=hello|||exec=WIG_container%%%WIG_toastr|||txt=toast");
+// HELP WIG_dropdown => WIG_btn("caption=help on wig_dropdown","cmd=WIG_container|||visibility=hidden|%|exec=WIG_help|||my_help=WIG_dropdown");
+// HELP WIG_dropdown => https://url?WIG_dropdown
+// HELP create dropdown menu call like this WIG_dropdown("caption=drop_test","w_dropdown=WIG_msg|||my_caption=msg|||txt=hello%%%WIG_container|||my_caption=container");
 function WIG_dropdown()
  {
 WIG_reset_global_vars();
@@ -110,15 +215,17 @@ if ( $my_delay < 1000 ){echo "<script type=\"text/javascript\">$(document).ready
  
  
  
-// color metro= class : bg-blue fg-red ,alert,info,succes, primary, .secondary, .success, .alert, .warning, .yellow, .info and .light 
-// my_pos metro          :  top,left,bottom, right , tl,tr,bl,br
+// HELP WIG_toast color metro= class : bg-blue fg-red ,alert,info,succes, primary, .secondary, .success, .alert, .warning, .yellow, .info and .light 
+// ELP WIG_toast  my_pos metro          :  top,left,bottom, right , tl,tr,bl,br
 // HELP create toast msg with given params , the position is determined by "my_pos" , the color by "class"
 function WIG_toast()
 {
 $my_function=__FUNCTION__;$my_function=str_replace("WIG","WAR","$my_function");
 $GLOBALS["$my_function"]=array_merge($GLOBALS["WAR_metro"],func_get_args());
-$GLOBALS["$my_function"]["delay"]="5000";$GLOBALS["$my_function"]["z-index"]="9999";
+$GLOBALS["$my_function"]["delay"]="2000";$GLOBALS["$my_function"]["z-index"]="9999";
 $GLOBALS["$my_function"]["width"]="300px";$GLOBALS["$my_function"]["height"]="100px";
+unset($GLOBALS["$my_function"]["border"]);
+$GLOBALS["$my_function"]["sidebar_btn"]="NO";
 $my_style=WIAG_bs($GLOBALS["$my_function"]);
 if ( preg_match('/right|tr|br|mid|mr/', $GLOBALS["$my_function"]["my_pos"]) == 1 ){$GLOBALS["$my_function"]["left"]="80%";}
 $my_style=WIAG_bs($GLOBALS["$my_function"]);
@@ -367,9 +474,15 @@ if ( preg_match('/^JAV_/',$given_exec) == 1 )
              $my_click="$my_args)";$button_txt="$my_click";
 		    }
 			// JAV_p is called it is JAV_p('.............') => arguments are not changed 
-            if ( preg_match('/^JAV_p/',$given_exec ) == 1 && strlen($given_exec) > 5  )
+            if ( preg_match('(^JAV_p)',$given_exec ) == 1 && strlen($given_exec) > 5  )
 			 {
               $my_args="";$my_click="";$my_args="JAV_p('" ;$given_exec=str_replace("JAV_p|||","","$given_exec");
+			  $my_click=$my_args . $given_exec . "');";
+			 }	
+            // JAV_p is called it is JAV_html('.............') => arguments are not changed 
+            if ( preg_match('(^JAV_html)',$given_exec ) == 1 && strlen($given_exec) > 5  )
+			 {
+              $my_args="";$my_click="";$my_args="JAV_html('" ;$given_exec=str_replace("JAV_html|||","","$given_exec");
 			  $my_click=$my_args . $given_exec . "');";
 			 }				 
 	     // echo "<br>MY STYLE  : $my_style <br>";
@@ -383,7 +496,7 @@ $my_args="";$my_click="";$my_args="JAV_p('" ;$given_exec=str_replace("JAV_p|||",
 			  $my_click=$my_args . $given_exec . "');";	
 echo "<div><button type=\"button\" id=\"$new_id\" data-tooltip=\"$my_click\" class=\"btn-danger bg-red\" $my_style onclick=\"$my_click;return false;\">NNN:$given_caption</button></div><br>";  			  
 }
-
+// echo "<br> REFRESH=" . $GLOBALS["$my_function"]["refresh"];
 // create FORM based on refresh value action=\"incl_metro_functions.php\"
  $new_id="form_id" . round(microtime(true) * 1000);
 if ( preg_match('/^NO/',$GLOBALS["$my_function"]["refresh"]) == 1 ){echo "<div><form id=\"$new_id\" method=\"POST\" >";$class="fg-red bg-blue";$given_caption="N:$given_caption";} 
@@ -397,12 +510,12 @@ if ( preg_match('/^NO/',$GLOBALS["$my_function"]["refresh"]) == 1 )
 {
 echo "<script type=\"text/javascript\">  $(document).ready(function() { console.log(Date() + \"$given_caption exec : $given_exec\"); } );</script>";
 ?>	
- 
+<p id="fetchResult"></p>
 <script>
-// JAV_prevent();
 document.getElementById(<?php echo "'" . "$new_id" . "'"; ?>).addEventListener('submit', function (e) {
     e.preventDefault(); // *** CRUCIAL: Prevents the default page refresh/reload ***
     const formData = new FormData(this);
+	var resultDiv = document.getElementById("fetchResult");
 	console.log(formData);
     fetch('incl_metro_functions.php', {
         method: 'POST',
@@ -412,11 +525,12 @@ document.getElementById(<?php echo "'" . "$new_id" . "'"; ?>).addEventListener('
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        return response.text(); // Get the response body as text/HTML
+       return response.text(); // Get the response body as text/HTML
     })
 	//
    .then((responseText) => {
-  document.querySelector("body").innerHTML += responseText
+  // document.querySelector("body").innerHTML += responseText
+  resultDiv.innerHTML += responseText;
 })
    
     .catch(error => {
@@ -425,9 +539,7 @@ document.getElementById(<?php echo "'" . "$new_id" . "'"; ?>).addEventListener('
   });
  </script>
 <?php
-
  }	
-
 echo "</div></form>";
 }
 
@@ -444,33 +556,43 @@ function WIAG_bs_exec(&$my_array,$my_style="none")
 	
 foreach ($my_array as $key => $value)
  {
-  
+//  echo "<br> DEBUG before 2 WIAGS_bs_exec key :$key => $value"; 
+ 
   // check if DEBUG is ON 
+  // $key="DEBUG";$value="ON";
   if(preg_match('/^DEBUG/',$key) == 1 && preg_match('/^ON/',$value) == 1 )
    {
-    foreach ($my_array as $key => $value){echo "<br> WIAGS_bs_exec key :$key value => $value";}
+    foreach ($my_array as $key => $value){echo "<br> DEBUG WIAGS_bs_exec key :$key value => $value";}
 	echo "<br>WIAG_BS BACKTRACE<pre>";print_r(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS,1));echo "</pre>";
 	echo "<br>";echo "<br>$my_style<br>";
 	}
-// jos  
+ 
   // need sidebar YES or NO default NO
   if ( preg_match('/^sidebar_btn/',$key) == 1 && preg_match('/^YES/',$value) == 1 )
  {WIG_menu("txt_tablename=sidebar_btn.dat","class=info","top=10px","left=10px","position=absolute","my_option=sidebar");}	
 
+// need sidebar YES or NO default NO
+  if ( preg_match('/^help_btn/',$key) == 1 && preg_match('/^YES/',$value) == 1 )
+ {
+	 $search_function=str_replace("wig_","WIG_",$my_array["function"]);
+	 WIG_btn("caption=HELP","cmd=JAV_html|||WIG_help=my_help=$search_function|||delay=5000|||z-index=12000|||position=absolute|||top=10px|||class=fg-red bg-blue");
+	//  WIG_btn("caption=jav_html wig_msg","cmd=JAV_html|||WIG_msg=delay=13000|||z-index=12000|||my_pos=tr");
+	 }	
+
   // key =WIG_ + value =WIG_
-  if(preg_match('/^WIG_/',$key) == 1 && preg_match('/^WIG_/',$value) == 1 )
+  if(preg_match('/^WIG_/',$key) == 1 && preg_match('/^WIG_/',$value) == 1  )
    {
    $num_args=explode("|||",$value);$my_function=$key;$value=implode("|||" ,$num_args);
    if ( function_exists( $key)){call_user_func_array("$key",explode("|||",$value));continue;}     
    }
    // key=WIG and value is not |||
-   if(preg_match('/^WIG_/',$key) == 1 && preg_match('/\|\|\|/',$value) == 0 )
+   if(preg_match('/^WIG_/',$key) == 1 && preg_match('/\|\|\|/',$value) == 0  )
    {
    $num_args=explode("|||",$value);$my_function=$key;$value=implode("|||" ,$num_args);
    if ( function_exists( $key)){call_user_func_array("$key",explode("|||",$value));continue;}     
    } 
   // key=WIG_ and value = ||| more param's are given
-  if(preg_match('/^WIG_/',$key) == 1 && preg_match('/\|\|\|/',$value) == 1   )
+  if(preg_match('/^WIG_/',$key) == 1 && preg_match('/\|\|\|/',$value) == 1  )
    {
    $num_args=explode("|||",$value);$my_function=$key;$value=implode("|||" ,$num_args);
     if ( function_exists( $my_function)){call_user_func_array("$my_function",explode("|||",$value));continue;}     
@@ -511,12 +633,11 @@ foreach ($my_array as $key => $value)
 		
 	} 
    } 
-// echo "<br> WIAGS_bs_exec key :$key => $value";
+// echo "<br> DEBUG after 2 WIAGS_bs_exec key :$key value => $value";
  }
- 
+
   
 }
-
 
 
 // HELP call metroui objects using an array + set new/replace values 
@@ -528,10 +649,12 @@ $new_style="style=\"";$new_id="cmd_" .  round(microtime(true) * 1000);usleep(10)
 // start checking params + change the value
 if(!isset($GLOBALS["$dup_array"]["my_option"] )){$GLOBALS["$dup_array"]["my_option"]="none";}
 if(!isset($GLOBALS["$dup_array"]["my_function"] )){$GLOBALS["$dup_array"]["my_function"]="none";}
+if(!isset($GLOBALS["$dup_array"]["caption"] )){$GLOBALS["$dup_array"]["caption"]="none";}
 $my_function=debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function'];
-$GLOBALS["$dup_array"]["my_function"]=strtolower("$my_function");
-
+$GLOBALS["$dup_array"]["my_function"]=strtolower("caption");
+$GLOBALS["$dup_array"]["caption"]=strtolower("$my_function");
 // echo "<br>WIAG_BS <pre>";print_r(debug_backtrace());echo "</pre>";
+
 foreach ($GLOBALS["$dup_array"] as $key => $value)
 	{
      // key = 0,1,2 and value begins with WIG_ 	=> remove the old key + skip to next key
@@ -673,7 +796,7 @@ return $my_data_role . " " . $my_class . " " . $new_style . "\"";
 // HELP call java function  JAV_notify(my_text,my_delay,my_color,my_width)
 function WIG_toastr($my_txt="none" , $my_delay="1500" , $my_color="info" , $my_width="250" )
 {
-echo "<script type=\"text/javascript\">  $(document).ready(function() { JAV_notify('$my_txt','$my_delay','$my_color',$my_width); } );</script>";
+echo "<script type=\"text/javascript\">  $(document).ready(function() { JAV_notify('$my_txt',$my_delay,'$my_color',$my_width); } );</script>";
 // WIG_clean_url();
 }
 
@@ -706,8 +829,9 @@ foreach ($my_param as $key => $value)
 function WIG_iframe()
 {
 WIG_reset_global_vars();
-$GLOBALS["WAR_iframe"]=array_merge($GLOBALS["WAR_iframe"],func_get_args());
-$my_style=WIAG_bs($GLOBALS["WAR_iframe"]);
+$my_function=__FUNCTION__;$my_function=str_replace("WIG","WAR","$my_function");	
+$GLOBALS["$my_function"]=array_merge($GLOBALS["WAR_metro"],$GLOBALS["$my_function"],func_get_args());
+$my_style=WIAG_bs($GLOBALS["$my_function"]);
 $new_id="WIG_iframe" .  round(microtime(true) * 1000);usleep(10);
 $delay=$GLOBALS["WAR_iframe"]["delay"];	
 $iframe=$GLOBALS["WAR_iframe"]["iframe"];
@@ -796,7 +920,7 @@ function WIG_container()
 {
 WIG_reset_global_vars();
 $my_function=__FUNCTION__;$my_function=str_replace("WIG","WAR","$my_function");
-$GLOBALS["$my_function"]=array_merge($GLOBALS["WAR_metro"],func_get_args());
+$GLOBALS["$my_function"]=array_merge($GLOBALS["WAR_metro"],$GLOBALS["$my_function"],func_get_args());
 $my_style=WIAG_bs($GLOBALS["$my_function"]);
 $my_delay=intval($GLOBALS["$my_function"]["delay"]);$my_txt=$GLOBALS["$my_function"]["txt"];
 usleep(100);$time_end=round(microtime(true) * 1000);$new_id="$my_function" . "_" . "$time_end";
@@ -804,7 +928,8 @@ $seconds=round($my_delay / 1000, 0, PHP_ROUND_HALF_UP);$seconds=$seconds . "s";
 $animation=$GLOBALS["$my_function"]["animation"];
 $my_style=WIAG_bs($GLOBALS["$my_function"]);
 echo "<div $my_style id=\"$new_id\" >";	
-if ( $my_delay > 1000 ){WIG_progress("timer=$my_delay");WIG_progres("timer=$my_delay");}
+// echo "<br> STYLE : <br>$my_style";
+if ( $my_delay > 1000 ){WIG_progres("timer=$my_delay");}
 if ( preg_match('/^none/',$GLOBALS["$my_function"]["txt"])== 0 ){echo "<br> $my_txt ";}
 WIAG_bs_exec($GLOBALS["$my_function"]);
 //  foreach ($GLOBALS["$my_function"] as $key => $value){echo "<br> 2 WIG_container key :$key => $value";}
@@ -816,7 +941,6 @@ if ( $my_delay < 1000 ){echo "<script type=\"text/javascript\">$(document).ready
 }	
 
 
+// functions ends here
  
-
-
 ?>

@@ -2,10 +2,11 @@
 // incl_javascript.php used in wbs 
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
-
-
+// var_dump(headers_list());
 //  below begins the java functions beginning with JAV_
 // https://tutorial.eyehunts.com/js/javascript-keycode-list-event-which-event-key-event-code-values/
+
+
 ?>
 
 
@@ -23,10 +24,18 @@ error_reporting(E_ALL);
     }
   </style>
 
+<div id="mybody" ></div>
+
 <script>
 
+function JAV_test()
+{
+const nieuwElement = document.createElement('div');
+nieuwElement.id = 'myid';
+nieuwElement.style.cssText = 'width:100%;height:600px;position:sticky;visibility:hidden;border:2px solid red;z-index:12000;';
+document.body.appendChild(nieuwElement);
 
-
+}
 
 // HELP stop refresh  
 function JAV_prevent()
@@ -37,26 +46,55 @@ console.log(Date() + '!!! event.preventDefault on body no GET or POST !!!');
 
 
 
-// HELP call any script JAV_ or WIG_ directly without refresh 
+// style="width:100%;height:1200px !important;left:0px;right:0px;position:sticky;border:1px solid red;z-index:0;"
+function JAV_html(php_function)
+{
+
+if ( php_function === undefined  ){ php_function="WIG_msg=cmd=WIG_dt|||class=fg-red bg-blue|||my_pos=tr|||z-index=12000|||delay=10000|||exec=WIG_clock|||DEBUG=ON|||exec2=WIG_fill"; }
+const element = $("<div>").appendTo($("body"));
+php_function='incl_metro_functions.php?' + php_function;
+Metro.makePlugin(element, "html-container",{htmlSource: php_function,insertMode: "replace"});	
+}
+
+
+
 function JAV_p(php_function)
 {
-if ( php_function === undefined  ){ php_function="WIG_msg=cmd=WIG_dt|||class=fg-red bg-blue|||my_pos=tr|||delay=5000|||exec=WIG_clock|||DEBUG=ON|||exec2=WIG_show_hide|%|WIG_clock"; }
+if ( php_function === undefined  ){ php_function="WIG_msg=cmd=WIG_dt|||class=fg-red bg-blue|||my_pos=tr|||z-index=12000|||delay=10000|||exec=WIG_clock|||DEBUG=ON|||exec2=WIG_fill"; }
+const element = $("<div>").appendTo($("#mybody"));
+php_function='incl_metro_functions.php?' + php_function;
+Metro.makePlugin(element, "html-container",{htmlSource: php_function,insertMode: "prepend"});	
+}
+
+
+function JAV_html_orig(php_function)
+{
+if ( php_function === undefined  ){ php_function="WIG_msg=cmd=WIG_dt|||class=fg-red bg-blue|||my_pos=tr|||z-index=12000|||delay=10000|||exec=WIG_clock|||DEBUG=ON|||exec2=WIG_fill"; }
+const element = $("<div>").appendTo($("body"));
+php_function='incl_metro_functions.php?' + php_function;
+Metro.makePlugin(element, "html-container",{htmlSource: php_function,insertMode: "default"});	
+}
+
+// HELP call any script JAV_ or WIG_ directly without refresh 
+async function JAV_p_old(php_function)
+{
+if ( php_function === undefined  ){ php_function="WIG_msg=cmd=WIG_dt|||class=fg-red bg-blue|||my_pos=tr|||delay=10000|||exec=WIG_clock|||DEBUG=ON|||exec2=WIG_show_hide|%|WIG_clock"; }
 console.log(Date() + 'JAV_p : ' + php_function);
-fetch("incl_metro_functions.php", {
+
+await fetch("incl_metro_functions.php", { // start fetch
   method: "POST",
   headers: {
     "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
   },
   body: php_function
-})
+}) // end fetch
 .then((response) => response.text())
-.then((responseText) => {
-  document.querySelector("body").innerHTML += responseText
-})
-.catch((error) => {
-  console.log(error)
-})
+.then((responseText) => {document.querySelector("body").innerHTML += responseText})
+.catch((error) => {console.log(error)})
 }
+
+
+
 
 </script>
 
@@ -72,11 +110,13 @@ fetch("incl_metro_functions.php", {
 	 var my_text,my_delay,my_color,my_width;
 	if ( my_text === undefined  ){ my_text="none"; }
 	if ( my_color === undefined  ){ my_color="primary"; }
-	if ( my_delay === undefined  ){ my_delay=15000; }
-	if ( my_width === undefined  ){ my_width=250; }
-	 console.log(Date() + 'JAV_notify ');
+	if ( my_delay === undefined  ){ my_delay=10000; }
+	if ( my_width === undefined  ){ my_width=550; }
+	 console.log(Date() + 'JAV_notify ' + my_delay  );
+	 Metro.notify.setup({timeout: my_delay});
 	// alert,info,succes, primary, .secondary, .success, .alert, .warning, .yellow, .info and .light
-     Metro.notify.create(my_text, ""  , {timeout:my_delay,width:my_width,clsNotify:my_color});	
+     // Metro.notify.create(my_text, 'delay :' + my_delay + 'width :' + my_width  , {timeout:my_delay,width:my_width,clsNotify:my_color});	
+	 Metro.notify.create(my_text,'' ,{timeout:my_delay,width:my_width,clsNotify:my_color});	
 	}
 
 // HELP disable the refresh of the browser 
@@ -226,7 +266,7 @@ if ( my_delay === undefined  ){ my_delay='5s'; }
   }
 my_hide_int=parseInt(my_delay, 10);
 my_hide_int=my_hide_int * 900;
-console.log( Date() + 'jav_hide is called' + my_id + "..." + my_action + "...." + my_delay ); 
+// console.log( Date() + 'jav_hide is called' + my_id + "..." + my_action + "...." + my_delay ); 
 // alert(my_id + " :::" + my_action + " :::" +  my_delay );
 const element = document.getElementById(my_id);
 element.style.setProperty('animation-duration', my_delay);
@@ -243,7 +283,7 @@ var my_id,my_action,my_delay;
 const my_timer = ms => new Promise(res => setTimeout(res, ms));
 var my_actions = ["slideInDown","slideInLeft","slideInRight","slideInUp","fadeIn","zoomIn","bounceInLeft"];
 if ( my_delay === undefined  ){ my_delay='5s'; }
-console.log( 'jav_show_hide is called' + my_id + "..." + my_action + "...." + my_delay ); 
+// console.log( 'jav_show_hide is called' + my_id + "..." + my_action + "...." + my_delay ); 
  if ( my_action === "none"  )
   {
 	my_action="slideInLeft"; 
